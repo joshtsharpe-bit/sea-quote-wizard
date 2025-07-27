@@ -54,7 +54,12 @@ const YachtCharterWizard: React.FC = () => {
     if (currentStep < STEPS.length - 1) {
       setCurrentStep(currentStep + 1);
       setTimeout(() => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        // Scroll to just below the progress section for a smoother transition
+        const progressSection = document.querySelector('.progress-section');
+        if (progressSection) {
+          const offset = progressSection.getBoundingClientRect().bottom + window.scrollY + 20;
+          window.scrollTo({ top: offset, behavior: 'smooth' });
+        }
       }, 100);
     }
   };
@@ -63,7 +68,11 @@ const YachtCharterWizard: React.FC = () => {
     if (currentStep > 0) {
       setCurrentStep(currentStep - 1);
       setTimeout(() => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        const progressSection = document.querySelector('.progress-section');
+        if (progressSection) {
+          const offset = progressSection.getBoundingClientRect().bottom + window.scrollY + 20;
+          window.scrollTo({ top: offset, behavior: 'smooth' });
+        }
       }, 100);
     }
   };
@@ -99,7 +108,7 @@ const YachtCharterWizard: React.FC = () => {
         </div>
 
         {/* Progress Bar */}
-        <Card className="mb-8 glass">
+        <Card className="mb-8 glass progress-section">
           <CardContent className="p-6">
             <div className="flex items-center justify-between mb-4">
               <span className="text-sm font-medium text-muted-foreground">
