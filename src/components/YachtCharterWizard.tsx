@@ -104,7 +104,16 @@ const YachtCharterWizard: React.FC = () => {
               </span>
             </div>
             <Progress value={progress} className="mb-4" />
-            <div className="grid grid-cols-5 gap-2">
+            
+            {/* Mobile: Show only current step */}
+            <div className="block md:hidden">
+              <div className="text-center p-3 rounded-lg bg-primary text-primary-foreground">
+                <div className="text-sm font-medium">{STEPS[currentStep].title}</div>
+              </div>
+            </div>
+            
+            {/* Desktop: Show all steps */}
+            <div className="hidden md:grid md:grid-cols-5 gap-2">
               {STEPS.map((step, index) => (
                 <div
                   key={step.id}
@@ -114,7 +123,7 @@ const YachtCharterWizard: React.FC = () => {
                       : 'bg-muted text-muted-foreground'
                   }`}
                 >
-                  <div className="text-xs font-medium">{step.title}</div>
+                  <div className="text-xs font-medium leading-tight">{step.title}</div>
                 </div>
               ))}
             </div>
