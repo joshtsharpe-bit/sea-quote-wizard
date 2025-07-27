@@ -24,11 +24,11 @@ const DurationGuestsStep: React.FC<DurationGuestsStepProps> = ({ data, updateDat
   };
 
   const getDurationText = (days: number) => {
-    if (days === 1) return '1 day';
-    if (days < 7) return `${days} days`;
-    if (days === 7) return '1 week';
-    if (days < 14) return `${days} days (${Math.floor(days / 7)} week${Math.floor(days / 7) > 1 ? 's' : ''} + ${days % 7} day${days % 7 > 1 ? 's' : ''})`;
-    return `${days} days (${Math.floor(days / 7)} weeks + ${days % 7} day${days % 7 > 1 ? 's' : ''})`;
+    if (days === 1) return '1 Day';
+    if (days === 7) return '1 Week';
+    if (days === 14) return '2 Weeks';
+    if (days === 21) return '3 Weeks';
+    return `${days} Days`;
   };
 
   return (
@@ -57,8 +57,8 @@ const DurationGuestsStep: React.FC<DurationGuestsStepProps> = ({ data, updateDat
                   <Calendar className="h-5 w-5 text-primary" />
                   <h3 className="text-lg font-semibold">Charter Duration</h3>
                 </div>
-                <div className="text-right">
-                  <div className="text-2xl font-bold text-primary">
+                <div className="text-right min-w-[100px]">
+                  <div className="text-2xl font-bold text-primary leading-tight">
                     {getDurationText(data.duration)}
                   </div>
                 </div>
