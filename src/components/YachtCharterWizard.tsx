@@ -6,7 +6,8 @@ import { ChevronLeft, ChevronRight, Anchor, Ship } from 'lucide-react';
 import DestinationStep from './wizard/DestinationStep';
 import YachtTypeStep from './wizard/YachtTypeStep';
 import DurationGuestsStep from './wizard/DurationGuestsStep';
-import AmenitiesStep from './wizard/AmenitiesStep';
+import DateSelectionStep from './wizard/DateSelectionStep';
+import IncludedAmenitiesStep from './wizard/IncludedAmenitiesStep';
 import QuoteSummary from './wizard/QuoteSummary';
 
 export interface WizardData {
@@ -16,6 +17,7 @@ export interface WizardData {
     region: string;
     image: string;
     basePrice: number;
+    countries?: string[];
   } | null;
   yachtType: {
     name: string;
@@ -24,8 +26,11 @@ export interface WizardData {
     priceMultiplier: number;
     capacity: number;
   } | null;
-  duration: number;
   guests: number;
+  duration: number;
+  startDate?: string;
+  endDate?: string;
+  isBareboatCharter?: boolean;
   amenities: string[];
 }
 
@@ -35,9 +40,9 @@ import NewDestinationStep from './wizard/NewDestinationStep';
 const STEPS = [
   { id: 'welcome', title: 'Welcome', component: WelcomeStep },
   { id: 'destination', title: 'Destination', component: NewDestinationStep },
-  { id: 'yacht', title: 'Yacht Type', component: YachtTypeStep },
-  { id: 'details', title: 'Duration & Guests', component: DurationGuestsStep },
-  { id: 'amenities', title: 'Amenities', component: AmenitiesStep },
+  { id: 'yacht', title: 'Yacht & Guests', component: YachtTypeStep },
+  { id: 'dates', title: 'Dates', component: DateSelectionStep },
+  { id: 'package', title: 'Package', component: IncludedAmenitiesStep },
   { id: 'quote', title: 'Your Quote', component: QuoteSummary },
 ];
 
@@ -47,8 +52,8 @@ const YachtCharterWizard: React.FC = () => {
     hasChartered: undefined,
     destination: null,
     yachtType: null,
-    duration: 7,
     guests: 4,
+    duration: 7,
     amenities: [],
   });
 
@@ -87,8 +92,8 @@ const YachtCharterWizard: React.FC = () => {
     switch (currentStep) {
       case 0: return wizardData.hasChartered !== undefined;
       case 1: return !!wizardData.destination;
-      case 2: return !!wizardData.yachtType;
-      case 3: return wizardData.duration > 0 && wizardData.guests > 0;
+      case 2: return !!wizardData.yachtType && wizardData.guests > 0;
+      case 3: return wizardData.startDate && wizardData.endDate && wizardData.duration >= 5;
       case 4: return true;
       case 5: return true;
       default: return false;
@@ -142,7 +147,7 @@ const YachtCharterWizard: React.FC = () => {
               {STEPS.map((step, index) => (
                 <div
                   key={step.id}
-                  className={`text-center p-2 rounded-lg transition-all ${
+                  className={`text-center p-3 rounded-lg transition-all ${
                     index <= currentStep
                       ? 'bg-primary text-primary-foreground'
                       : 'bg-muted text-muted-foreground'

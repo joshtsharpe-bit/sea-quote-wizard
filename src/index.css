@@ -8,21 +8,21 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* Base colors - Muted Duotone */
-    --background: 240 10% 15%;
-    --foreground: 0 0% 95%;
+    /* Base colors for bright glass theme */
+    --background: 220 15% 12%;
+    --foreground: 210 40% 98%;
 
-    /* Card system - Glass morphism */
-    --card: 240 10% 20%;
-    --card-foreground: 0 0% 95%;
+    /* Card and surface colors */
+    --card: 220 15% 15%;
+    --card-foreground: 210 40% 98%;
 
-    --popover: 240 10% 20%;
-    --popover-foreground: 0 0% 95%;
+    --popover: 220 15% 15%;
+    --popover-foreground: 210 40% 98%;
 
-    /* Primary - Elegant Blue */
-    --primary: 200 50% 60%;
-    --primary-foreground: 0 0% 100%;
-    --primary-glow: 200 60% 70%;
+    /* Primary brand colors - brighter blue */
+    --primary: 195 100% 75%;
+    --primary-foreground: 220 15% 8%;
+    --primary-glow: 195 100% 85%;
 
     /* Secondary - Warm Accent */
     --secondary: 30 40% 65%;

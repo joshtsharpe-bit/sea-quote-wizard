@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Anchor, Users, Check } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Slider } from '@/components/ui/slider';
+import { Anchor, Users, Check, AlertTriangle } from 'lucide-react';
 import { WizardData } from '../YachtCharterWizard';
 import motorYachtImg from '@/assets/yacht-motor.jpg';
 import sailingYachtImg from '@/assets/yacht-sailing.jpg';
@@ -13,8 +15,8 @@ interface YachtTypeStepProps {
 
 const yachtTypes = [
   {
-    name: 'Motor Yacht',
-    type: 'motor',
+    name: 'Power Yacht',
+    type: 'power',
     image: motorYachtImg,
     priceMultiplier: 1.0,
     capacity: 8,
@@ -23,29 +25,59 @@ const yachtTypes = [
     length: '50-80 ft'
   },
   {
-    name: 'Sailing Yacht',
-    type: 'sailing',
+    name: 'Power Cat',
+    type: 'powercat',
+    image: motorYachtImg,
+    priceMultiplier: 1.2,
+    capacity: 10,
+    description: 'Stable catamaran with power and space',
+    features: ['Stable Platform', 'Shallow Draft', 'Spacious Layout', 'Fast Cruising'],
+    length: '45-65 ft'
+  },
+  {
+    name: 'Sailing Cat',
+    type: 'sailingcat',
     image: sailingYachtImg,
-    priceMultiplier: 0.8,
-    capacity: 6,
-    description: 'Classic elegance with authentic sailing experience',
-    features: ['Eco-Friendly', 'Silent Operation', 'Authentic Experience', 'Wind Power'],
-    length: '40-70 ft'
+    priceMultiplier: 0.9,
+    capacity: 10,
+    description: 'Spacious sailing catamaran for comfort',
+    features: ['Stability', 'Large Living Space', 'Shallow Waters', 'Eco-Friendly'],
+    length: '40-60 ft'
   },
   {
     name: 'Mega Yacht',
     type: 'mega',
     image: megaYachtImg,
     priceMultiplier: 2.5,
-    capacity: 16,
+    capacity: 20,
     description: 'Ultimate luxury with crew and premium services',
     features: ['Full Crew', 'Multiple Decks', 'Luxury Amenities', 'Professional Service'],
     length: '100+ ft'
+  },
+  {
+    name: 'Sail Monohull',
+    type: 'sailmono',
+    image: sailingYachtImg,
+    priceMultiplier: 0.7,
+    capacity: 8,
+    description: 'Classic sailing yacht for authentic experience',
+    features: ['Traditional Sailing', 'Intimate Setting', 'Eco-Friendly', 'Pure Sailing'],
+    length: '35-55 ft'
   }
 ];
 
 const YachtTypeStep: React.FC<YachtTypeStepProps> = ({ data, updateData }) => {
+  const [showWarning, setShowWarning] = useState(false);
+  const [attemptedYacht, setAttemptedYacht] = useState<typeof yachtTypes[0] | null>(null);
+
   const selectYachtType = (yacht: typeof yachtTypes[0]) => {
+    // Check if guests > 12 and yacht is not mega yacht
+    if (data.guests > 12 && yacht.type !== 'mega') {
+      setAttemptedYacht(yacht);
+      setShowWarning(true);
+      return;
+    }
+
     updateData({
       yachtType: {
         name: yacht.name,
@@ -57,13 +89,78 @@ const YachtTypeStep: React.FC<YachtTypeStepProps> = ({ data, updateData }) => {
     });
   };
 
+  const handleReduceGuests = () => {
+    updateData({ guests: 12 });
+    if (attemptedYacht) {
+      selectYachtType(attemptedYacht);
+    }
+    setShowWarning(false);
+    setAttemptedYacht(null);
+  };
+
   const getEstimatedPrice = (yacht: typeof yachtTypes[0]) => {
     if (!data.destination) return 0;
     return Math.round(data.destination.basePrice * yacht.priceMultiplier);
   };
 
   return (
-    <div>
+    <div className="max-w-6xl mx-auto">
+      {/* Guests Selection */}
+      <Card className="mb-6 glass">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Users className="h-5 w-5 text-primary" />
+            How many guests?
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-6">
+            <div className="flex items-center justify-between">
+              <p className="text-muted-foreground">
+                Select the number of guests for your charter
+              </p>
+              <div className="text-right">
+                <div className="text-2xl font-bold text-primary">
+                  {data.guests} guest{data.guests > 1 ? 's' : ''}
+                </div>
+              </div>
+            </div>
+            
+            <div className="space-y-4">
+              <Slider
+                value={[data.guests]}
+                onValueChange={(value) => updateData({ guests: value[0] })}
+                max={20}
+                min={1}
+                step={1}
+                className="w-full"
+              />
+              <div className="flex justify-between text-sm text-muted-foreground">
+                <span>1</span>
+                <span>10</span>
+                <span>20</span>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-4 md:grid-cols-8 gap-2">
+              {[2, 4, 6, 8, 10, 12, 14, 16].map((guests) => (
+                <button
+                  key={guests}
+                  onClick={() => updateData({ guests })}
+                  className={`p-2 rounded-md text-sm transition-all btn-3d ${
+                    data.guests === guests
+                      ? 'bg-primary text-primary-foreground'
+                      : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
+                  }`}
+                >
+                  {guests}
+                </button>
+              ))}
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
       <Card className="mb-6 glass">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
@@ -77,6 +174,42 @@ const YachtTypeStep: React.FC<YachtTypeStepProps> = ({ data, updateData }) => {
           </p>
         </CardContent>
       </Card>
+
+      {/* Warning Modal */}
+      {showWarning && (
+        <Card className="mb-6 glass border-destructive/50 bg-destructive/5">
+          <CardContent className="p-6">
+            <div className="flex items-start gap-4">
+              <AlertTriangle className="h-6 w-6 text-destructive flex-shrink-0 mt-1" />
+              <div className="flex-1">
+                <h3 className="text-lg font-semibold text-destructive mb-2">
+                  Group Size Too Large
+                </h3>
+                <p className="text-muted-foreground mb-4">
+                  With {data.guests} guests, you'll need a Mega Yacht or consider tandem charters. 
+                  You can reduce your group size to 12 guests or speak with our broker about tandem charter options.
+                </p>
+                <div className="flex gap-3">
+                  <Button
+                    onClick={handleReduceGuests}
+                    variant="outline"
+                    className="btn-3d"
+                  >
+                    Reduce to 12 Guests
+                  </Button>
+                  <Button
+                    onClick={() => setShowWarning(false)}
+                    variant="outline"
+                    className="btn-3d"
+                  >
+                    Speak to Broker
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
         {yachtTypes.map((yacht) => (
