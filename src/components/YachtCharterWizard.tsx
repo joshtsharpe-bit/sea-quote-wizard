@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
-import { ChevronLeft, ChevronRight, Anchor } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Anchor, Ship } from 'lucide-react';
 import DestinationStep from './wizard/DestinationStep';
 import YachtTypeStep from './wizard/YachtTypeStep';
 import DurationGuestsStep from './wizard/DurationGuestsStep';
@@ -10,6 +10,7 @@ import AmenitiesStep from './wizard/AmenitiesStep';
 import QuoteSummary from './wizard/QuoteSummary';
 
 export interface WizardData {
+  hasChartered?: boolean;
   destination: {
     name: string;
     region: string;
@@ -28,9 +29,13 @@ export interface WizardData {
   amenities: string[];
 }
 
+import WelcomeStep from './wizard/WelcomeStep';
+import NewDestinationStep from './wizard/NewDestinationStep';
+
 const STEPS = [
-  { id: 'destination', title: 'Choose Destination', component: DestinationStep },
-  { id: 'yacht', title: 'Select Yacht Type', component: YachtTypeStep },
+  { id: 'welcome', title: 'Welcome', component: WelcomeStep },
+  { id: 'destination', title: 'Destination', component: NewDestinationStep },
+  { id: 'yacht', title: 'Yacht Type', component: YachtTypeStep },
   { id: 'details', title: 'Duration & Guests', component: DurationGuestsStep },
   { id: 'amenities', title: 'Amenities', component: AmenitiesStep },
   { id: 'quote', title: 'Your Quote', component: QuoteSummary },
@@ -39,6 +44,7 @@ const STEPS = [
 const YachtCharterWizard: React.FC = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [wizardData, setWizardData] = useState<WizardData>({
+    hasChartered: undefined,
     destination: null,
     yachtType: null,
     duration: 7,
@@ -79,11 +85,12 @@ const YachtCharterWizard: React.FC = () => {
 
   const canProceed = () => {
     switch (currentStep) {
-      case 0: return !!wizardData.destination;
-      case 1: return !!wizardData.yachtType;
-      case 2: return wizardData.duration > 0 && wizardData.guests > 0;
-      case 3: return true;
+      case 0: return wizardData.hasChartered !== undefined;
+      case 1: return !!wizardData.destination;
+      case 2: return !!wizardData.yachtType;
+      case 3: return wizardData.duration > 0 && wizardData.guests > 0;
       case 4: return true;
+      case 5: return true;
       default: return false;
     }
   };
@@ -92,23 +99,26 @@ const YachtCharterWizard: React.FC = () => {
   const progress = ((currentStep + 1) / STEPS.length) * 100;
 
   return (
-    <div className="min-h-screen bg-gradient-hero">
-      <div className="container mx-auto px-4 py-8">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <div className="flex items-center justify-center gap-2 mb-4">
-            <Anchor className="h-8 w-8 text-primary animate-wave" />
-            <h1 className="text-3xl md:text-4xl font-bold text-foreground">
-              Charter Your Dream Yacht
-            </h1>
+    <div className="min-h-screen bg-gradient-hero relative">
+      <div className="container mx-auto px-4 py-8 relative z-10">
+        {/* Header - only show after welcome step */}
+        {currentStep > 0 && (
+          <div className="text-center mb-8">
+            <div className="flex items-center justify-center gap-3 mb-4">
+              <Ship className="h-8 w-8 text-primary animate-wave" />
+              <h1 className="text-3xl md:text-4xl font-bold text-foreground">
+                KŌKAI Charters
+              </h1>
+            </div>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              Let us guide you through creating the perfect yacht charter experience
+            </p>
           </div>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Let us guide you through creating the perfect yacht charter experience
-          </p>
-        </div>
+        )}
 
-        {/* Progress Bar */}
-        <Card className="mb-8 glass progress-section">
+        {/* Progress Bar - only show after welcome step */}
+        {currentStep > 0 && (
+          <Card className="mb-8 glass progress-section">
           <CardContent className="p-6">
             <div className="flex items-center justify-between mb-4">
               <span className="text-sm font-medium text-muted-foreground">
@@ -128,7 +138,7 @@ const YachtCharterWizard: React.FC = () => {
             </div>
             
             {/* Desktop: Show all steps */}
-            <div className="hidden md:grid md:grid-cols-5 gap-2">
+            <div className="hidden md:grid md:grid-cols-6 gap-2">
               {STEPS.map((step, index) => (
                 <div
                   key={step.id}
@@ -144,6 +154,7 @@ const YachtCharterWizard: React.FC = () => {
             </div>
           </CardContent>
         </Card>
+        )}
 
         {/* Current Step */}
         <CurrentStepComponent
@@ -158,7 +169,7 @@ const YachtCharterWizard: React.FC = () => {
               variant="outline"
               onClick={prevStep}
               disabled={currentStep === 0}
-              className="min-w-[120px]"
+              className="min-w-[120px] btn-3d"
             >
               <ChevronLeft className="h-4 w-4 mr-2" />
               Previous
@@ -166,7 +177,7 @@ const YachtCharterWizard: React.FC = () => {
             <Button
               onClick={nextStep}
               disabled={!canProceed()}
-              className="min-w-[120px] bg-gradient-ocean hover:opacity-90"
+              className="min-w-[120px] btn-3d bg-primary hover:bg-primary/90"
             >
               Next
               <ChevronRight className="h-4 w-4 ml-2" />

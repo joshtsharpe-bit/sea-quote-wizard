@@ -2,73 +2,78 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Yacht Charter App Design System - Ocean & Luxury Theme
+/* KŌKAI Charters Design System - Muted Duotone with Glass Morphism
 All colors MUST be HSL.
 */
 
 @layer base {
   :root {
-    /* Base colors - Ocean inspired */
-    --background: 220 45% 98%;
-    --foreground: 213 31% 18%;
+    /* Base colors - Muted Duotone */
+    --background: 240 10% 15%;
+    --foreground: 0 0% 95%;
 
-    /* Card system */
-    --card: 0 0% 100%;
-    --card-foreground: 213 31% 18%;
+    /* Card system - Glass morphism */
+    --card: 240 10% 20%;
+    --card-foreground: 0 0% 95%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 213 31% 18%;
+    --popover: 240 10% 20%;
+    --popover-foreground: 0 0% 95%;
 
-    /* Primary - Deep Ocean Blue */
-    --primary: 213 94% 68%;
+    /* Primary - Elegant Blue */
+    --primary: 200 50% 60%;
     --primary-foreground: 0 0% 100%;
-    --primary-glow: 213 94% 78%;
+    --primary-glow: 200 60% 70%;
 
-    /* Secondary - Soft Ocean */
-    --secondary: 210 100% 95%;
-    --secondary-foreground: 213 31% 18%;
+    /* Secondary - Warm Accent */
+    --secondary: 30 40% 65%;
+    --secondary-foreground: 240 10% 15%;
 
-    /* Muted - Light Ocean Mist */
-    --muted: 210 60% 96%;
-    --muted-foreground: 213 15% 55%;
+    /* Muted - Subtle tones */
+    --muted: 240 10% 25%;
+    --muted-foreground: 240 5% 65%;
 
-    /* Accent - Luxury Gold */
-    --accent: 38 92% 75%;
-    --accent-foreground: 213 31% 18%;
+    /* Accent - Soft highlight */
+    --accent: 200 40% 50%;
+    --accent-foreground: 0 0% 95%;
 
     /* Destructive */
-    --destructive: 0 84% 60%;
+    --destructive: 0 60% 55%;
     --destructive-foreground: 0 0% 100%;
 
-    /* Borders and inputs */
-    --border: 210 40% 90%;
-    --input: 210 40% 90%;
-    --ring: 213 94% 68%;
+    /* Borders and inputs - Glass effect */
+    --border: 240 10% 30%;
+    --input: 240 10% 25%;
+    --ring: 200 50% 60%;
 
-    --radius: 0.75rem;
+    --radius: 1rem;
 
-    /* Gradients */
-    --gradient-ocean: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)));
-    --gradient-hero: linear-gradient(180deg, hsl(var(--background)), hsl(210 100% 97%));
-    --gradient-card: linear-gradient(145deg, hsl(var(--card)), hsl(210 40% 99%));
+    /* Duotone Gradients with Film Grain */
+    --gradient-duotone: linear-gradient(135deg, hsl(240 15% 12%) 0%, hsl(200 20% 18%) 50%, hsl(240 15% 12%) 100%);
+    --gradient-hero: radial-gradient(ellipse at top, hsl(200 30% 20%), hsl(240 15% 10%));
+    --gradient-card: linear-gradient(145deg, hsl(240 12% 18% / 0.8), hsl(240 8% 22% / 0.6));
     
-    /* Shadows */
-    --shadow-soft: 0 4px 6px -1px hsl(var(--primary) / 0.1);
-    --shadow-medium: 0 10px 15px -3px hsl(var(--primary) / 0.1);
-    --shadow-large: 0 25px 50px -12px hsl(var(--primary) / 0.25);
+    /* Glass morphism shadows */
+    --shadow-soft: 0 8px 32px hsl(240 15% 5% / 0.3);
+    --shadow-medium: 0 16px 64px hsl(240 15% 5% / 0.4);
+    --shadow-large: 0 32px 128px hsl(240 15% 5% / 0.5);
     
-    /* Animations */
-    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    /* 3D effect shadows */
+    --shadow-3d: 0 4px 16px hsl(240 15% 5% / 0.4), 0 8px 32px hsl(240 15% 5% / 0.2);
+    --shadow-inset: inset 0 2px 4px hsl(240 20% 30% / 0.3);
     
-    /* Sidebar - Ocean themed */
-    --sidebar-background: 213 94% 68%;
-    --sidebar-foreground: 0 0% 100%;
-    --sidebar-primary: 0 0% 100%;
-    --sidebar-primary-foreground: 213 94% 68%;
-    --sidebar-accent: 213 94% 78%;
-    --sidebar-accent-foreground: 0 0% 100%;
-    --sidebar-border: 213 94% 78%;
-    --sidebar-ring: 38 92% 75%;
+    /* Smooth transitions */
+    --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-spring: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    
+    /* Sidebar */
+    --sidebar-background: 240 12% 18%;
+    --sidebar-foreground: 0 0% 95%;
+    --sidebar-primary: 200 50% 60%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 10% 25%;
+    --sidebar-accent-foreground: 0 0% 95%;
+    --sidebar-border: 240 10% 30%;
+    --sidebar-ring: 200 50% 60%;
   }
 
   .dark {
@@ -125,8 +130,25 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground;
-    background: linear-gradient(135deg, hsl(var(--background)), hsl(210 100% 97%));
+    background: var(--gradient-duotone);
     min-height: 100vh;
+    position: relative;
+  }
+  
+  /* Film grain texture overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+      radial-gradient(circle at 20% 50%, transparent 20%, hsl(240 15% 5% / 0.05) 21%, hsl(240 15% 5% / 0.05) 34%, transparent 35%, transparent),
+      linear-gradient(0deg, transparent 24%, hsl(240 15% 5% / 0.03) 25%, hsl(240 15% 5% / 0.03) 26%, transparent 27%, transparent 74%, hsl(240 15% 5% / 0.03) 75%, hsl(240 15% 5% / 0.03) 76%, transparent 77%, transparent),
+      linear-gradient(90deg, transparent 24%, hsl(240 15% 5% / 0.03) 25%, hsl(240 15% 5% / 0.03) 26%, transparent 27%, transparent 74%, hsl(240 15% 5% / 0.03) 75%, hsl(240 15% 5% / 0.03) 76%, transparent 77%, transparent);
+    pointer-events: none;
+    z-index: 0;
   }
   
   /* Custom animations */
@@ -149,10 +171,42 @@ All colors MUST be HSL.
     75% { transform: rotate(-5deg); }
   }
   
-  /* Glass morphism effects */
+  /* Enhanced Glass morphism effects */
   .glass {
-    backdrop-filter: blur(10px);
-    background: hsl(var(--card) / 0.8);
-    border: 1px solid hsl(var(--border) / 0.5);
+    backdrop-filter: blur(20px) saturate(180%);
+    background: var(--gradient-card);
+    border: 1px solid hsl(var(--border) / 0.3);
+    box-shadow: var(--shadow-3d);
+    position: relative;
+    z-index: 1;
+  }
+  
+  .glass::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, hsl(0 0% 100% / 0.1) 0%, transparent 50%, hsl(0 0% 100% / 0.05) 100%);
+    border-radius: inherit;
+    pointer-events: none;
+  }
+  
+  /* 3D button effects */
+  .btn-3d {
+    box-shadow: var(--shadow-3d);
+    transform: translateY(0);
+    transition: var(--transition-spring);
+  }
+  
+  .btn-3d:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px hsl(var(--primary) / 0.3), 0 16px 50px hsl(var(--primary) / 0.2);
+  }
+  
+  .btn-3d:active {
+    transform: translateY(0);
+    box-shadow: var(--shadow-inset), var(--shadow-soft);
   }
 }
