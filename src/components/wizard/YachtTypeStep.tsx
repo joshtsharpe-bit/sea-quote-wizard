@@ -146,16 +146,13 @@ const YachtTypeStep: React.FC<YachtTypeStepProps> = ({ data, updateData }) => {
         </CardContent>
       </Card>
 
-      <Card className="mb-6 glass">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Anchor className="h-5 w-5 text-primary" />
-            Select Your Yacht Type
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
+      <Card className="mb-6 glass border-0 shadow-vintage">
+        <CardContent className="p-6">
+          <h2 className="text-2xl font-elegant font-semibold text-primary mb-2">
+            Select Your Yacht
+          </h2>
           <p className="text-muted-foreground">
-            Choose the perfect yacht that matches your sailing style and group size
+            Choose your preferred yacht style
           </p>
         </CardContent>
       </Card>
@@ -224,35 +221,21 @@ const YachtTypeStep: React.FC<YachtTypeStepProps> = ({ data, updateData }) => {
                 <p className="text-sm opacity-90">{yacht.length}</p>
               </div>
             </div>
-            <CardContent className="p-6">
-              <p className="text-muted-foreground mb-4">{yacht.description}</p>
+            <CardContent className="p-4">
+              <p className="text-sm text-muted-foreground mb-3 line-clamp-2">{yacht.description}</p>
               
-              <div className="flex items-center gap-2 mb-4">
-                <Users className="h-4 w-4 text-primary" />
+              <div className="flex items-center gap-2 mb-3">
+                <Users className="h-3 w-3 text-primary" />
                 <span className="text-sm">Up to {yacht.capacity} guests</span>
               </div>
 
-              <div className="grid grid-cols-2 gap-2 mb-4">
-                {yacht.features.map((feature) => (
-                  <span
-                    key={feature}
-                    className="bg-secondary text-secondary-foreground px-2 py-1 rounded-md text-xs text-center"
-                  >
-                    {feature}
-                  </span>
-                ))}
-              </div>
-
-              <div className="text-right">
-                <span className="text-sm text-muted-foreground">Estimated price</span>
-                <div className="text-xl font-bold text-primary">
+              <div className="flex justify-between items-center">
+                <span className="text-xs text-muted-foreground">
+                  {yacht.features.slice(0, 2).join(' • ')}
+                </span>
+                <span className="text-sm font-medium text-primary">
                   ${getEstimatedPrice(yacht).toLocaleString()}/week
-                </div>
-                {yacht.priceMultiplier !== 1.0 && (
-                  <span className="text-xs text-muted-foreground">
-                    {yacht.priceMultiplier > 1 ? '+' : ''}{Math.round((yacht.priceMultiplier - 1) * 100)}% vs base
-                  </span>
-                )}
+                </span>
               </div>
             </CardContent>
           </Card>

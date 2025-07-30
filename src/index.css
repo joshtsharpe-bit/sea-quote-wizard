@@ -9,51 +9,51 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* Vintage Summer Color Palette - Old Money Beach */
-    --background: 45 35% 96%;          /* Warm cream ivory */
-    --foreground: 25 25% 20%;          /* Rich dark brown */
+    /* Vintage Summer Color Palette - Higher Contrast, Less Bright */
+    --background: 40 15% 92%;          /* Muted warm cream */
+    --foreground: 20 30% 15%;          /* Much darker brown */
 
     /* Card and surface colors */
-    --card: 42 40% 97%;                /* Soft warm ivory */
-    --card-foreground: 25 25% 20%;
+    --card: 38 20% 95%;                /* Subtle warm ivory */
+    --card-foreground: 20 30% 15%;
 
-    --popover: 42 40% 97%;
-    --popover-foreground: 25 25% 20%;
+    --popover: 38 20% 95%;
+    --popover-foreground: 20 30% 15%;
 
-    /* Primary brand colors - Deep vintage ocean */
-    --primary: 195 85% 32%;            /* Deep vintage ocean blue */
-    --primary-foreground: 42 40% 97%;
-    --primary-glow: 195 75% 42%;       /* Lighter ocean blue */
+    /* Primary brand colors - Deeper, more muted */
+    --primary: 200 65% 25%;            /* Much deeper ocean blue */
+    --primary-foreground: 38 20% 95%;
+    --primary-glow: 200 55% 35%;       /* Muted ocean blue */
 
-    /* Secondary - Warm beach sand */
-    --secondary: 35 50% 72%;           /* Warm sand beige */
-    --secondary-foreground: 25 30% 25%;
+    /* Secondary - More muted sand */
+    --secondary: 30 35% 60%;           /* Muted sand beige */
+    --secondary-foreground: 20 35% 20%;
 
-    /* Muted - Subtle warm tones */
-    --muted: 40 25% 90%;               /* Soft warm cream */
-    --muted-foreground: 30 15% 50%;    /* Warm gray */
+    /* Muted - Better contrast */
+    --muted: 35 15% 85%;               /* Muted warm cream */
+    --muted-foreground: 25 20% 40%;    /* Darker warm gray */
 
-    /* Accent - Sunset coral */
-    --accent: 25 70% 62%;              /* Sunset coral/peach */
-    --accent-foreground: 25 25% 20%;
+    /* Accent - Muted coral */
+    --accent: 20 50% 45%;              /* Muted coral */
+    --accent-foreground: 38 20% 95%;
 
     /* Destructive */
     --destructive: 0 70% 50%;
     --destructive-foreground: 42 40% 97%;
 
-    /* Borders and inputs - Warm vintage */
-    --border: 40 30% 82%;              /* Soft warm border */
-    --input: 40 30% 85%;
-    --ring: 195 85% 32%;
+    /* Borders and inputs - Better contrast */
+    --border: 35 20% 70%;              /* Stronger border */
+    --input: 35 20% 88%;
+    --ring: 200 65% 25%;
 
     --radius: 0.875rem;
 
-    /* Vintage Summer Gradients */
+    /* Muted vintage gradients - Less bright */
     --gradient-ocean: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--primary-glow)) 100%);
-    --gradient-hero: linear-gradient(180deg, hsl(45 40% 94%) 0%, hsl(35 50% 86%) 100%);
-    --gradient-card: linear-gradient(145deg, hsl(var(--card)) 0%, hsl(40 40% 92%) 100%);
-    --gradient-sunset: linear-gradient(135deg, hsl(25 70% 62%) 0%, hsl(35 75% 68%) 50%, hsl(45 65% 74%) 100%);
-    --gradient-vintage: linear-gradient(135deg, hsl(195 85% 32%) 0%, hsl(25 70% 62%) 100%);
+    --gradient-hero: linear-gradient(180deg, hsl(40 15% 90%) 0%, hsl(35 20% 82%) 100%);
+    --gradient-card: linear-gradient(145deg, hsl(var(--card)) 0%, hsl(35 15% 88%) 100%);
+    --gradient-sunset: linear-gradient(135deg, hsl(20 50% 45%) 0%, hsl(30 45% 50%) 50%, hsl(40 40% 55%) 100%);
+    --gradient-vintage: linear-gradient(135deg, hsl(200 65% 25%) 0%, hsl(20 50% 45%) 100%);
     --gradient-warm: linear-gradient(145deg, hsl(42 40% 97%) 0%, hsl(35 50% 90%) 100%);
     
     /* Vintage warm shadows */

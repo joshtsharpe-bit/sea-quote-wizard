@@ -52,16 +52,13 @@ const DestinationStep: React.FC<DestinationStepProps> = ({ data, updateData }) =
 
   return (
     <div>
-      <Card className="mb-6 glass">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <MapPin className="h-5 w-5 text-primary" />
-            Where would you like to sail?
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
+      <Card className="mb-6 glass border-0 shadow-vintage">
+        <CardContent className="p-6">
+          <h2 className="text-2xl font-elegant font-semibold text-primary mb-2">
+            Choose Your Destination
+          </h2>
           <p className="text-muted-foreground">
-            Choose your dream destination for an unforgettable yacht charter experience
+            Select where you'd like to sail
           </p>
         </CardContent>
       </Card>
@@ -94,23 +91,15 @@ const DestinationStep: React.FC<DestinationStepProps> = ({ data, updateData }) =
                 <p className="text-sm opacity-90">{destination.region}</p>
               </div>
             </div>
-            <CardContent className="p-6">
-              <p className="text-muted-foreground mb-4">{destination.description}</p>
-              <div className="flex flex-wrap gap-2 mb-4">
-                {destination.highlights.map((highlight) => (
-                  <span
-                    key={highlight}
-                    className="bg-secondary text-secondary-foreground px-2 py-1 rounded-full text-xs"
-                  >
-                    {highlight}
-                  </span>
-                ))}
-              </div>
-              <div className="text-right">
-                <span className="text-sm text-muted-foreground">Starting from</span>
-                <div className="text-xl font-bold text-primary">
-                  ${destination.basePrice.toLocaleString()}/week
-                </div>
+            <CardContent className="p-4">
+              <p className="text-sm text-muted-foreground mb-3 line-clamp-2">{destination.description}</p>
+              <div className="flex justify-between items-center">
+                <span className="text-xs text-muted-foreground">
+                  {destination.highlights.slice(0, 2).join(' • ')}
+                </span>
+                <span className="text-sm font-medium text-primary">
+                  From ${destination.basePrice.toLocaleString()}/week
+                </span>
               </div>
             </CardContent>
           </Card>

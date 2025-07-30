@@ -33,19 +33,16 @@ const LiveQuoteSidebar: React.FC<LiveQuoteSidebarProps> = ({ data, currentStep }
   };
 
   return (
-    <div className="w-80 min-h-screen bg-background/30 backdrop-blur-md border-r border-white/20 p-6 sticky top-0 overflow-y-auto">
-      <div className="space-y-6">
-        <div className="text-center">
-          <h2 className="text-xl font-bold text-foreground mb-2">KŌKAI Charters</h2>
-          <p className="text-sm text-muted-foreground">Live Quote Builder</p>
-        </div>
+    <div className="w-72 bg-card border-r border-border p-6 h-screen overflow-y-auto">
+      {/* Brand */}
+      <div className="mb-8 text-center">
+        <h2 className="text-xl font-elegant font-bold text-primary">KŌKAI</h2>
+        <p className="text-xs text-muted-foreground">Luxury Charters</p>
+      </div>
 
-        <Separator className="opacity-30" />
-
-        {/* Step Progress */}
-        <div className="space-y-4">
-          <h3 className="text-sm font-semibold text-foreground mb-3">Progress</h3>
-          
+      {/* Progress Steps */}
+      <div className="space-y-4 mb-8">
+        <h3 className="text-sm font-medium text-foreground">Your Charter</h3>
           {/* Experience Level */}
           <div className={`flex items-center gap-3 p-3 rounded-lg transition-all ${
             getStepStatus(0) === 'completed' ? 'bg-primary/20' : 
