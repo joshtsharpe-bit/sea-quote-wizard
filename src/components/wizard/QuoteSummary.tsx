@@ -21,6 +21,7 @@ import { useToast } from '@/hooks/use-toast';
 interface QuoteSummaryProps {
   data: WizardData;
   updateData: (updates: Partial<WizardData>) => void;
+  onNext: () => void;
 }
 
 const amenityPrices: Record<string, number> = {
@@ -37,7 +38,7 @@ const amenityNames: Record<string, string> = {
   tender: 'Tender Boat', pickup: 'Airport Pickup', helicopter: 'Helicopter Tour', concierge: 'Concierge Service'
 };
 
-const QuoteSummary: React.FC<QuoteSummaryProps> = ({ data }) => {
+const QuoteSummary: React.FC<QuoteSummaryProps> = ({ data, onNext }) => {
   const [email, setEmail] = useState('');
   const { toast } = useToast();
 
@@ -259,6 +260,13 @@ const QuoteSummary: React.FC<QuoteSummaryProps> = ({ data }) => {
             <p className="text-sm text-muted-foreground mb-3">
               Ready to proceed with booking? Schedule a consultation with our broker to finalize your charter.
             </p>
+            <Button 
+              onClick={onNext}
+              className="w-full btn-3d bg-primary hover:bg-primary/90"
+              size="lg"
+            >
+              Get a Broker
+            </Button>
           </div>
         </CardContent>
       </Card>

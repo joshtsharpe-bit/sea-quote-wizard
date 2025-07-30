@@ -115,6 +115,7 @@ const BrokerConsultationStep: React.FC<BrokerConsultationStepProps> = ({ data, u
         <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
           Schedule a consultation with our expert yacht broker to finalize your 
           ${getTotalPrice().toLocaleString()} charter and ensure every detail is perfect.
+          We'll create your account and provide a dedicated portal to track and manage your booking process.
         </p>
       </div>
 
