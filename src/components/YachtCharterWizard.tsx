@@ -32,11 +32,22 @@ export interface WizardData {
   endDate?: string;
   isBareboatCharter?: boolean;
   amenities: string[];
+  contactDetails?: {
+    firstName: string;
+    lastName: string;
+    phone: string;
+    email: string;
+    preferredDate: string;
+    preferredTime: string;
+    specialRequests: string;
+  };
+  consultationRequested?: boolean;
 }
 
 import WelcomeStep from './wizard/WelcomeStep';
 import NewDestinationStep from './wizard/NewDestinationStep';
 import LiveQuoteSidebar from './wizard/LiveQuoteSidebar';
+import BrokerConsultationStep from './wizard/BrokerConsultationStep';
 
 const STEPS = [
   { id: 'welcome', title: 'Welcome', component: WelcomeStep },
@@ -45,6 +56,7 @@ const STEPS = [
   { id: 'dates', title: 'Dates', component: DateSelectionStep },
   { id: 'package', title: 'Package', component: IncludedAmenitiesStep },
   { id: 'quote', title: 'Your Quote', component: QuoteSummary },
+  { id: 'broker', title: 'Book Charter', component: BrokerConsultationStep },
 ];
 
 const YachtCharterWizard: React.FC = () => {
@@ -97,6 +109,7 @@ const YachtCharterWizard: React.FC = () => {
       case 3: return wizardData.startDate && wizardData.endDate && wizardData.duration >= 5;
       case 4: return true;
       case 5: return true;
+      case 6: return true;
       default: return false;
     }
   };
@@ -113,20 +126,6 @@ const YachtCharterWizard: React.FC = () => {
       
       <div className="flex-1 relative z-10">
         <div className="container mx-auto px-4 py-8">
-          {/* Header - only show after welcome step */}
-          {currentStep > 0 && (
-            <div className="text-center mb-8">
-              <div className="flex items-center justify-center gap-3 mb-4">
-                <Ship className="h-8 w-8 text-primary animate-wave" />
-                <h1 className="text-3xl md:text-4xl font-bold text-foreground">
-                  KŌKAI Charters
-                </h1>
-              </div>
-              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                Let us guide you through creating the perfect yacht charter experience
-              </p>
-            </div>
-          )}
 
           {/* Current Step */}
           <CurrentStepComponent

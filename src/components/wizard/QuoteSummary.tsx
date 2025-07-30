@@ -43,20 +43,13 @@ const QuoteSummary: React.FC<QuoteSummaryProps> = ({ data }) => {
 
   const getBasePrice = () => {
     if (!data.destination || !data.yachtType) return 0;
-    const baseWeeklyPrice = data.destination.basePrice * data.yachtType.priceMultiplier;
-    const dailyPrice = baseWeeklyPrice / 7;
-    const guestMultiplier = 1 + (data.guests - 2) * 0.05;
-    return Math.round(dailyPrice * data.duration * guestMultiplier);
-  };
-
-  const getAmenitiesPrice = () => {
-    return data.amenities.reduce((total, amenityId) => {
-      return total + (amenityPrices[amenityId] || 0) * data.duration;
-    }, 0);
+    const basePrice = data.destination.basePrice * data.yachtType.priceMultiplier * data.duration;
+    const bareboatDiscount = data.isBareboatCharter ? 0.4 : 0; // 40% discount for bareboat
+    return Math.round(basePrice * (1 - bareboatDiscount));
   };
 
   const getTotalPrice = () => {
-    return getBasePrice() + getAmenitiesPrice();
+    return getBasePrice();
   };
 
   const getDurationText = (days: number) => {
@@ -163,23 +156,19 @@ const QuoteSummary: React.FC<QuoteSummaryProps> = ({ data }) => {
               </div>
             </div>
 
-            {/* Amenities */}
-            {data.amenities.length > 0 && (
-              <div className="flex items-start gap-3">
-                <Star className="h-5 w-5 text-primary mt-1" />
-                <div className="flex-1">
-                  <h4 className="font-semibold">{data.amenities.length} Premium Amenities</h4>
-                  <div className="text-sm text-muted-foreground space-y-1 mt-2">
-                    {data.amenities.map(amenityId => (
-                      <div key={amenityId} className="flex justify-between">
-                        <span>{amenityNames[amenityId]}</span>
-                        <span>+${amenityPrices[amenityId]}/day</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
+            {/* Package Type */}
+            <div className="flex items-start gap-3">
+              <Star className="h-5 w-5 text-primary mt-1" />
+              <div className="flex-1">
+                <h4 className="font-semibold">{data.isBareboatCharter ? 'Bareboat Charter' : 'All-Inclusive Package'}</h4>
+                <p className="text-sm text-muted-foreground">
+                  {data.isBareboatCharter 
+                    ? 'Boat only - you handle provisions and navigation'
+                    : 'Includes crew, food & beverages, water toys, and more'
+                  }
+                </p>
               </div>
-            )}
+            </div>
           </CardContent>
         </Card>
 
@@ -190,17 +179,22 @@ const QuoteSummary: React.FC<QuoteSummaryProps> = ({ data }) => {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex justify-between">
-              <span>Base Charter ({getDurationText(data.duration)})</span>
-              <span className="font-semibold">${getBasePrice().toLocaleString()}</span>
+              <span>Base price</span>
+              <span>${data.destination?.basePrice.toLocaleString()}/week</span>
             </div>
-            
-            {data.amenities.length > 0 && (
-              <>
-                <div className="flex justify-between">
-                  <span>Amenities ({data.duration} day{data.duration > 1 ? 's' : ''})</span>
-                  <span className="font-semibold">+${getAmenitiesPrice().toLocaleString()}</span>
-                </div>
-              </>
+            <div className="flex justify-between">
+              <span>Yacht multiplier</span>
+              <span>{data.yachtType?.priceMultiplier}x</span>
+            </div>
+            <div className="flex justify-between">
+              <span>Duration</span>
+              <span>{data.duration} nights</span>
+            </div>
+            {data.isBareboatCharter && (
+              <div className="flex justify-between text-green-600">
+                <span>Bareboat discount</span>
+                <span>-40%</span>
+              </div>
             )}
             
             <Separator />
@@ -259,6 +253,12 @@ const QuoteSummary: React.FC<QuoteSummaryProps> = ({ data }) => {
               <Share2 className="h-4 w-4 mr-2" />
               Share Quote
             </Button>
+          </div>
+          
+          <div className="mt-4 pt-4 border-t border-border/50">
+            <p className="text-sm text-muted-foreground mb-3">
+              Ready to proceed with booking? Schedule a consultation with our broker to finalize your charter.
+            </p>
           </div>
         </CardContent>
       </Card>

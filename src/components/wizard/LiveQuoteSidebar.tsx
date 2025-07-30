@@ -13,7 +13,9 @@ interface LiveQuoteSidebarProps {
 const LiveQuoteSidebar: React.FC<LiveQuoteSidebarProps> = ({ data, currentStep }) => {
   const calculateTotalPrice = () => {
     if (!data.destination || !data.yachtType) return 0;
-    return Math.round(data.destination.basePrice * data.yachtType.priceMultiplier * data.duration);
+    const basePrice = data.destination.basePrice * data.yachtType.priceMultiplier * data.duration;
+    const bareboatDiscount = data.isBareboatCharter ? 0.4 : 0; // 40% discount for bareboat
+    return Math.round(basePrice * (1 - bareboatDiscount));
   };
 
   const getStepStatus = (stepIndex: number) => {
@@ -171,6 +173,12 @@ const LiveQuoteSidebar: React.FC<LiveQuoteSidebarProps> = ({ data, currentStep }
                   <span className="text-muted-foreground">Duration</span>
                   <span>{data.duration} nights</span>
                 </div>
+                {data.isBareboatCharter && (
+                  <div className="flex justify-between text-xs text-green-600">
+                    <span className="text-muted-foreground">Bareboat discount</span>
+                    <span>-40%</span>
+                  </div>
+                )}
                 <Separator className="opacity-30" />
                 <div className="flex justify-between font-semibold">
                   <span>Total</span>
