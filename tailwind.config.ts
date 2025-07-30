@@ -18,6 +18,11 @@ export default {
 			}
 		},
 		extend: {
+			fontFamily: {
+				'serif': ['Playfair Display', 'Georgia', 'serif'],
+				'vintage': ['Cormorant Garamond', 'Playfair Display', 'serif'],
+				'elegant': ['Playfair Display', 'Georgia', 'serif'],
+			},
 			colors: {
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
@@ -67,12 +72,16 @@ export default {
 			backgroundImage: {
 				'gradient-ocean': 'var(--gradient-ocean)',
 				'gradient-hero': 'var(--gradient-hero)',
-				'gradient-card': 'var(--gradient-card)'
+				'gradient-card': 'var(--gradient-card)',
+				'gradient-sunset': 'var(--gradient-sunset)',
+				'gradient-vintage': 'var(--gradient-vintage)'
 			},
 			boxShadow: {
 				'soft': 'var(--shadow-soft)',
 				'medium': 'var(--shadow-medium)',
-				'large': 'var(--shadow-large)'
+				'large': 'var(--shadow-large)',
+				'vintage': 'var(--shadow-vintage)',
+				'warm': 'var(--shadow-warm)'
 			},
 			transitionProperty: {
 				'smooth': 'var(--transition-smooth)'

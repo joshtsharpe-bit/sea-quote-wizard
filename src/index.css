@@ -2,124 +2,130 @@
 @tailwind components;
 @tailwind utilities;
 
-/* KŌKAI Charters Design System - Muted Duotone with Glass Morphism
+/* KŌKAI Charters Design System - Vintage Summer Elegance
+Royal Old Money Beach Vibes - Nostalgic Summer Aesthetic
 All colors MUST be HSL.
 */
 
 @layer base {
   :root {
-    /* Base colors for bright glass theme */
-    --background: 220 15% 12%;
-    --foreground: 210 40% 98%;
+    /* Vintage Summer Color Palette - Old Money Beach */
+    --background: 45 35% 96%;          /* Warm cream ivory */
+    --foreground: 25 25% 20%;          /* Rich dark brown */
 
     /* Card and surface colors */
-    --card: 220 15% 15%;
-    --card-foreground: 210 40% 98%;
+    --card: 42 40% 97%;                /* Soft warm ivory */
+    --card-foreground: 25 25% 20%;
 
-    --popover: 220 15% 15%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 42 40% 97%;
+    --popover-foreground: 25 25% 20%;
 
-    /* Primary brand colors - brighter blue */
-    --primary: 195 100% 75%;
-    --primary-foreground: 220 15% 8%;
-    --primary-glow: 195 100% 85%;
+    /* Primary brand colors - Deep vintage ocean */
+    --primary: 195 85% 32%;            /* Deep vintage ocean blue */
+    --primary-foreground: 42 40% 97%;
+    --primary-glow: 195 75% 42%;       /* Lighter ocean blue */
 
-    /* Secondary - Warm Accent */
-    --secondary: 30 40% 65%;
-    --secondary-foreground: 240 10% 15%;
+    /* Secondary - Warm beach sand */
+    --secondary: 35 50% 72%;           /* Warm sand beige */
+    --secondary-foreground: 25 30% 25%;
 
-    /* Muted - Subtle tones */
-    --muted: 240 10% 25%;
-    --muted-foreground: 240 5% 65%;
+    /* Muted - Subtle warm tones */
+    --muted: 40 25% 90%;               /* Soft warm cream */
+    --muted-foreground: 30 15% 50%;    /* Warm gray */
 
-    /* Accent - Soft highlight */
-    --accent: 200 40% 50%;
-    --accent-foreground: 0 0% 95%;
+    /* Accent - Sunset coral */
+    --accent: 25 70% 62%;              /* Sunset coral/peach */
+    --accent-foreground: 25 25% 20%;
 
     /* Destructive */
-    --destructive: 0 60% 55%;
-    --destructive-foreground: 0 0% 100%;
+    --destructive: 0 70% 50%;
+    --destructive-foreground: 42 40% 97%;
 
-    /* Borders and inputs - Glass effect */
-    --border: 240 10% 30%;
-    --input: 240 10% 25%;
-    --ring: 200 50% 60%;
+    /* Borders and inputs - Warm vintage */
+    --border: 40 30% 82%;              /* Soft warm border */
+    --input: 40 30% 85%;
+    --ring: 195 85% 32%;
 
-    --radius: 1rem;
+    --radius: 0.875rem;
 
-    /* Duotone Gradients with Film Grain */
-    --gradient-duotone: linear-gradient(135deg, hsl(240 15% 12%) 0%, hsl(200 20% 18%) 50%, hsl(240 15% 12%) 100%);
-    --gradient-hero: radial-gradient(ellipse at top, hsl(200 30% 20%), hsl(240 15% 10%));
-    --gradient-card: linear-gradient(145deg, hsl(240 12% 18% / 0.8), hsl(240 8% 22% / 0.6));
+    /* Vintage Summer Gradients */
+    --gradient-ocean: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--primary-glow)) 100%);
+    --gradient-hero: linear-gradient(180deg, hsl(45 40% 94%) 0%, hsl(35 50% 86%) 100%);
+    --gradient-card: linear-gradient(145deg, hsl(var(--card)) 0%, hsl(40 40% 92%) 100%);
+    --gradient-sunset: linear-gradient(135deg, hsl(25 70% 62%) 0%, hsl(35 75% 68%) 50%, hsl(45 65% 74%) 100%);
+    --gradient-vintage: linear-gradient(135deg, hsl(195 85% 32%) 0%, hsl(25 70% 62%) 100%);
+    --gradient-warm: linear-gradient(145deg, hsl(42 40% 97%) 0%, hsl(35 50% 90%) 100%);
     
-    /* Glass morphism shadows */
-    --shadow-soft: 0 8px 32px hsl(240 15% 5% / 0.3);
-    --shadow-medium: 0 16px 64px hsl(240 15% 5% / 0.4);
-    --shadow-large: 0 32px 128px hsl(240 15% 5% / 0.5);
+    /* Vintage warm shadows */
+    --shadow-soft: 0 4px 20px hsl(25 30% 40% / 0.08);
+    --shadow-medium: 0 8px 30px hsl(25 30% 40% / 0.12);
+    --shadow-large: 0 20px 50px hsl(25 30% 40% / 0.15);
+    --shadow-vintage: 0 6px 25px hsl(195 85% 32% / 0.12);
+    --shadow-warm: 0 8px 30px hsl(25 70% 62% / 0.15);
+    --shadow-glow: 0 0 40px hsl(25 70% 62% / 0.2);
     
-    /* 3D effect shadows */
-    --shadow-3d: 0 4px 16px hsl(240 15% 5% / 0.4), 0 8px 32px hsl(240 15% 5% / 0.2);
-    --shadow-inset: inset 0 2px 4px hsl(240 20% 30% / 0.3);
+    /* Elegant transitions */
+    --transition-smooth: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    --transition-vintage: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
     
-    /* Smooth transitions */
-    --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    --transition-spring: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-    
-    /* Sidebar */
-    --sidebar-background: 240 12% 18%;
-    --sidebar-foreground: 0 0% 95%;
-    --sidebar-primary: 200 50% 60%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 10% 25%;
-    --sidebar-accent-foreground: 0 0% 95%;
-    --sidebar-border: 240 10% 30%;
-    --sidebar-ring: 200 50% 60%;
+    /* Sidebar - Vintage theme */
+    --sidebar-background: 40 35% 92%;
+    --sidebar-foreground: 25 25% 20%;
+    --sidebar-primary: 195 85% 32%;
+    --sidebar-primary-foreground: 42 40% 97%;
+    --sidebar-accent: 40 30% 85%;
+    --sidebar-accent-foreground: 25 25% 20%;
+    --sidebar-border: 40 30% 82%;
+    --sidebar-ring: 195 85% 32%;
   }
 
   .dark {
-    /* Dark mode - Deep Ocean Night */
-    --background: 213 31% 8%;
-    --foreground: 210 40% 98%;
+    /* Dark Theme - Vintage Moonlit Beach */
+    --background: 25 25% 8%;           /* Deep warm brown */
+    --foreground: 45 30% 92%;          /* Warm cream */
 
-    --card: 213 25% 12%;
-    --card-foreground: 210 40% 98%;
+    --card: 25 30% 12%;                /* Rich dark brown */
+    --card-foreground: 45 30% 92%;
 
-    --popover: 213 25% 12%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 25 30% 12%;
+    --popover-foreground: 45 30% 92%;
 
-    --primary: 213 94% 78%;
-    --primary-foreground: 213 31% 8%;
-    --primary-glow: 213 94% 88%;
+    --primary: 195 75% 55%;            /* Moonlit ocean blue */
+    --primary-foreground: 25 30% 12%;
+    --primary-glow: 195 70% 65%;
 
-    --secondary: 213 25% 18%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 35 35% 20%;           /* Dark sand */
+    --secondary-foreground: 45 30% 85%;
 
-    --muted: 213 25% 15%;
-    --muted-foreground: 213 15% 65%;
+    --muted: 30 20% 18%;               /* Dark warm gray */
+    --muted-foreground: 40 20% 65%;
 
-    --accent: 38 92% 65%;
-    --accent-foreground: 213 31% 8%;
+    --accent: 25 60% 50%;              /* Muted coral */
+    --accent-foreground: 45 30% 92%;
 
-    --destructive: 0 75% 55%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 65% 45%;
+    --destructive-foreground: 45 30% 92%;
 
-    --border: 213 25% 18%;
-    --input: 213 25% 18%;
-    --ring: 213 94% 78%;
+    --border: 30 25% 22%;
+    --input: 30 25% 22%;
+    --ring: 195 75% 55%;
     
-    /* Dark gradients */
-    --gradient-ocean: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)));
-    --gradient-hero: linear-gradient(180deg, hsl(var(--background)), hsl(213 25% 10%));
-    --gradient-card: linear-gradient(145deg, hsl(var(--card)), hsl(213 25% 15%));
+    /* Dark vintage gradients */
+    --gradient-ocean: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--primary-glow)) 100%);
+    --gradient-hero: linear-gradient(180deg, hsl(25 25% 8%) 0%, hsl(25 30% 14%) 100%);
+    --gradient-card: linear-gradient(145deg, hsl(var(--card)) 0%, hsl(30 30% 15%) 100%);
+    --gradient-sunset: linear-gradient(135deg, hsl(25 60% 30%) 0%, hsl(35 65% 35%) 50%, hsl(45 55% 40%) 100%);
+    --gradient-vintage: linear-gradient(135deg, hsl(195 75% 45%) 0%, hsl(25 60% 40%) 100%);
+    --gradient-warm: linear-gradient(145deg, hsl(25 30% 12%) 0%, hsl(30 30% 18%) 100%);
     
-    --sidebar-background: 213 25% 12%;
-    --sidebar-foreground: 210 40% 98%;
-    --sidebar-primary: 213 94% 78%;
-    --sidebar-primary-foreground: 213 31% 8%;
-    --sidebar-accent: 213 25% 18%;
-    --sidebar-accent-foreground: 210 40% 98%;
-    --sidebar-border: 213 25% 18%;
-    --sidebar-ring: 38 92% 65%;
+    --sidebar-background: 25 30% 12%;
+    --sidebar-foreground: 45 30% 92%;
+    --sidebar-primary: 195 75% 55%;
+    --sidebar-primary-foreground: 25 30% 12%;
+    --sidebar-accent: 30 25% 22%;
+    --sidebar-accent-foreground: 45 30% 92%;
+    --sidebar-border: 30 25% 22%;
+    --sidebar-ring: 25 60% 50%;
   }
 }
 
@@ -130,12 +136,18 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground;
-    background: var(--gradient-duotone);
+    font-family: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
+    line-height: 1.65;
+    font-weight: 400;
+    background: var(--gradient-hero);
     min-height: 100vh;
     position: relative;
+    font-feature-settings: "liga" 1, "kern" 1;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
   }
   
-  /* Film grain texture overlay */
+  /* Vintage texture overlay - subtle paper texture */
   body::before {
     content: '';
     position: fixed;
@@ -144,39 +156,61 @@ All colors MUST be HSL.
     width: 100%;
     height: 100%;
     background-image: 
-      radial-gradient(circle at 20% 50%, transparent 20%, hsl(240 15% 5% / 0.05) 21%, hsl(240 15% 5% / 0.05) 34%, transparent 35%, transparent),
-      linear-gradient(0deg, transparent 24%, hsl(240 15% 5% / 0.03) 25%, hsl(240 15% 5% / 0.03) 26%, transparent 27%, transparent 74%, hsl(240 15% 5% / 0.03) 75%, hsl(240 15% 5% / 0.03) 76%, transparent 77%, transparent),
-      linear-gradient(90deg, transparent 24%, hsl(240 15% 5% / 0.03) 25%, hsl(240 15% 5% / 0.03) 26%, transparent 27%, transparent 74%, hsl(240 15% 5% / 0.03) 75%, hsl(240 15% 5% / 0.03) 76%, transparent 77%, transparent);
+      radial-gradient(circle at 25% 25%, hsl(45 30% 85% / 0.03) 0%, transparent 50%),
+      radial-gradient(circle at 75% 75%, hsl(25 40% 80% / 0.02) 0%, transparent 50%),
+      repeating-linear-gradient(0deg, transparent, transparent 2px, hsl(40 20% 80% / 0.01) 2px, hsl(40 20% 80% / 0.01) 4px);
     pointer-events: none;
     z-index: 0;
   }
   
-  /* Custom animations */
+  /* Vintage typography enhancements */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+  
+  /* Custom animations - more elegant */
   .animate-float {
-    animation: float 6s ease-in-out infinite;
+    animation: float 8s ease-in-out infinite;
   }
   
   .animate-wave {
-    animation: wave 3s ease-in-out infinite;
+    animation: wave 4s ease-in-out infinite;
+  }
+  
+  .animate-fade-vintage {
+    animation: fadeVintage 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   }
   
   @keyframes float {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-20px); }
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-15px) rotate(1deg); }
   }
   
   @keyframes wave {
     0%, 100% { transform: rotate(0deg); }
-    25% { transform: rotate(5deg); }
-    75% { transform: rotate(-5deg); }
+    25% { transform: rotate(3deg); }
+    75% { transform: rotate(-3deg); }
   }
   
-  /* Enhanced Glass morphism effects */
+  @keyframes fadeVintage {
+    0% { 
+      opacity: 0; 
+      transform: translateY(20px) scale(0.95); 
+    }
+    100% { 
+      opacity: 1; 
+      transform: translateY(0) scale(1); 
+    }
+  }
+  
+  /* Enhanced vintage glass morphism */
   .glass {
-    backdrop-filter: blur(20px) saturate(180%);
-    background: var(--gradient-card);
-    border: 1px solid hsl(var(--border) / 0.3);
-    box-shadow: var(--shadow-3d);
+    backdrop-filter: blur(16px) saturate(150%);
+    background: var(--gradient-warm);
+    border: 1px solid hsl(var(--border) / 0.4);
+    box-shadow: var(--shadow-vintage), var(--shadow-soft);
     position: relative;
     z-index: 1;
   }
@@ -188,25 +222,85 @@ All colors MUST be HSL.
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(135deg, hsl(0 0% 100% / 0.1) 0%, transparent 50%, hsl(0 0% 100% / 0.05) 100%);
+    background: linear-gradient(135deg, hsl(45 50% 95% / 0.15) 0%, transparent 50%, hsl(25 40% 90% / 0.08) 100%);
     border-radius: inherit;
     pointer-events: none;
   }
   
-  /* 3D button effects */
+  /* Vintage 3D button effects */
   .btn-3d {
-    box-shadow: var(--shadow-3d);
+    box-shadow: 
+      0 4px 14px hsl(var(--primary) / 0.15),
+      0 2px 6px hsl(var(--primary) / 0.1),
+      inset 0 1px 0 hsl(0 0% 100% / 0.2);
     transform: translateY(0);
-    transition: var(--transition-spring);
+    transition: var(--transition-vintage);
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .btn-3d::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, hsl(0 0% 100% / 0.15), transparent);
+    transition: left 0.6s;
   }
   
   .btn-3d:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px hsl(var(--primary) / 0.3), 0 16px 50px hsl(var(--primary) / 0.2);
+    transform: translateY(-3px);
+    box-shadow: 
+      0 8px 25px hsl(var(--primary) / 0.25),
+      0 4px 12px hsl(var(--primary) / 0.15),
+      var(--shadow-glow);
+  }
+  
+  .btn-3d:hover::before {
+    left: 100%;
   }
   
   .btn-3d:active {
-    transform: translateY(0);
-    box-shadow: var(--shadow-inset), var(--shadow-soft);
+    transform: translateY(-1px);
+    box-shadow: 
+      0 6px 20px hsl(var(--primary) / 0.2),
+      inset 0 2px 4px hsl(var(--primary) / 0.15);
+  }
+  
+  /* Vintage card hover effects */
+  .card-vintage {
+    transition: var(--transition-vintage);
+    position: relative;
+  }
+  
+  .card-vintage:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-warm), var(--shadow-large);
+  }
+  
+  /* Elegant borders */
+  .border-vintage {
+    border: 2px solid;
+    border-image: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent))) 1;
+  }
+  
+  /* Vintage scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: hsl(var(--muted));
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)));
+    border-radius: 4px;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, hsl(var(--primary-glow)), hsl(var(--accent)));
   }
 }
