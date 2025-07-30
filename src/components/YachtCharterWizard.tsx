@@ -36,6 +36,7 @@ export interface WizardData {
 
 import WelcomeStep from './wizard/WelcomeStep';
 import NewDestinationStep from './wizard/NewDestinationStep';
+import LiveQuoteSidebar from './wizard/LiveQuoteSidebar';
 
 const STEPS = [
   { id: 'welcome', title: 'Welcome', component: WelcomeStep },
@@ -104,91 +105,58 @@ const YachtCharterWizard: React.FC = () => {
   const progress = ((currentStep + 1) / STEPS.length) * 100;
 
   return (
-    <div className="min-h-screen bg-gradient-hero relative">
-      <div className="container mx-auto px-4 py-8 relative z-10">
-        {/* Header - only show after welcome step */}
-        {currentStep > 0 && (
-          <div className="text-center mb-8">
-            <div className="flex items-center justify-center gap-3 mb-4">
-              <Ship className="h-8 w-8 text-primary animate-wave" />
-              <h1 className="text-3xl md:text-4xl font-bold text-foreground">
-                KŌKAI Charters
-              </h1>
-            </div>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Let us guide you through creating the perfect yacht charter experience
-            </p>
-          </div>
-        )}
-
-        {/* Progress Bar - only show after welcome step */}
-        {currentStep > 0 && (
-          <Card className="mb-8 glass progress-section">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between mb-4">
-              <span className="text-sm font-medium text-muted-foreground">
-                Step {currentStep + 1} of {STEPS.length}
-              </span>
-              <span className="text-sm font-medium text-muted-foreground">
-                {Math.round(progress)}% Complete
-              </span>
-            </div>
-            <Progress value={progress} className="mb-4" />
-            
-            {/* Mobile: Show only current step */}
-            <div className="block md:hidden">
-              <div className="text-center p-3 rounded-lg bg-primary text-primary-foreground">
-                <div className="text-sm font-medium">{STEPS[currentStep].title}</div>
+    <div className="min-h-screen bg-gradient-hero relative flex">
+      {/* Live Quote Sidebar - only show after welcome step */}
+      {currentStep > 0 && (
+        <LiveQuoteSidebar data={wizardData} currentStep={currentStep} />
+      )}
+      
+      <div className="flex-1 relative z-10">
+        <div className="container mx-auto px-4 py-8">
+          {/* Header - only show after welcome step */}
+          {currentStep > 0 && (
+            <div className="text-center mb-8">
+              <div className="flex items-center justify-center gap-3 mb-4">
+                <Ship className="h-8 w-8 text-primary animate-wave" />
+                <h1 className="text-3xl md:text-4xl font-bold text-foreground">
+                  KŌKAI Charters
+                </h1>
               </div>
+              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+                Let us guide you through creating the perfect yacht charter experience
+              </p>
             </div>
-            
-            {/* Desktop: Show all steps */}
-            <div className="hidden md:grid md:grid-cols-6 gap-2">
-              {STEPS.map((step, index) => (
-                <div
-                  key={step.id}
-                  className={`text-center p-3 rounded-lg transition-all ${
-                    index <= currentStep
-                      ? 'bg-primary text-primary-foreground'
-                      : 'bg-muted text-muted-foreground'
-                  }`}
-                >
-                  <div className="text-xs font-medium leading-tight">{step.title}</div>
-                </div>
-              ))}
+          )}
+
+          {/* Current Step */}
+          <CurrentStepComponent
+            data={wizardData}
+            updateData={updateWizardData}
+          />
+
+          {/* Navigation */}
+          {currentStep < STEPS.length - 1 && (
+            <div className="flex justify-between mt-8">
+              <Button
+                variant="outline"
+                onClick={prevStep}
+                disabled={currentStep === 0}
+                className="min-w-[120px] btn-3d"
+              >
+                <ChevronLeft className="h-4 w-4 mr-2" />
+                Previous
+              </Button>
+              <Button
+                onClick={nextStep}
+                disabled={!canProceed()}
+                className="min-w-[120px] btn-3d bg-primary hover:bg-primary/90"
+              >
+                Next
+                <ChevronRight className="h-4 w-4 ml-2" />
+              </Button>
             </div>
-          </CardContent>
-        </Card>
-        )}
-
-        {/* Current Step */}
-        <CurrentStepComponent
-          data={wizardData}
-          updateData={updateWizardData}
-        />
-
-        {/* Navigation */}
-        {currentStep < STEPS.length - 1 && (
-          <div className="flex justify-between mt-8">
-            <Button
-              variant="outline"
-              onClick={prevStep}
-              disabled={currentStep === 0}
-              className="min-w-[120px] btn-3d"
-            >
-              <ChevronLeft className="h-4 w-4 mr-2" />
-              Previous
-            </Button>
-            <Button
-              onClick={nextStep}
-              disabled={!canProceed()}
-              className="min-w-[120px] btn-3d bg-primary hover:bg-primary/90"
-            >
-              Next
-              <ChevronRight className="h-4 w-4 ml-2" />
-            </Button>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );

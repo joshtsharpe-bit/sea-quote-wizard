@@ -142,21 +142,6 @@ const YachtTypeStep: React.FC<YachtTypeStepProps> = ({ data, updateData }) => {
               </div>
             </div>
 
-            <div className="grid grid-cols-4 md:grid-cols-8 gap-2">
-              {[2, 4, 6, 8, 10, 12, 14, 16].map((guests) => (
-                <button
-                  key={guests}
-                  onClick={() => updateData({ guests })}
-                  className={`p-2 rounded-md text-sm transition-all btn-3d ${
-                    data.guests === guests
-                      ? 'bg-primary text-primary-foreground'
-                      : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
-                  }`}
-                >
-                  {guests}
-                </button>
-              ))}
-            </div>
           </div>
         </CardContent>
       </Card>
