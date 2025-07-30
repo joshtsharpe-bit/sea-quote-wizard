@@ -8,7 +8,7 @@ import DestinationStep from './wizard/DestinationStep';
 import YachtTypeStep from './wizard/YachtTypeStep';
 import DurationGuestsStep from './wizard/DurationGuestsStep';
 import DateSelectionStep from './wizard/DateSelectionStep';
-import AmenitiesStep from './wizard/AmenitiesStep';
+import IncludedAmenitiesStep from './wizard/IncludedAmenitiesStep';
 import QuoteSummary from './wizard/QuoteSummary';
 
 export interface WizardData {
@@ -55,7 +55,7 @@ const STEPS = [
   { id: 'destination', title: 'Destination', component: NewDestinationStep },
   { id: 'yacht', title: 'Yacht & Guests', component: YachtTypeStep },
   { id: 'dates', title: 'Dates', component: DateSelectionStep },
-  { id: 'package', title: 'Package', component: AmenitiesStep },
+  { id: 'package', title: 'Package', component: IncludedAmenitiesStep },
   { id: 'quote', title: 'Your Quote', component: QuoteSummary },
   { id: 'broker', title: 'Book Charter', component: BrokerConsultationStep },
 ];
