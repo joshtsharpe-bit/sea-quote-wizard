@@ -131,39 +131,10 @@ const YachtCharterWizard: React.FC = () => {
           </div>
         </div>
 
-        {/* Carousel Container */}
-        <div className="flex items-center justify-center min-h-[calc(100vh-80px)]">
-          <div className="w-full max-w-6xl mx-auto px-4 py-8">
-            <Carousel 
-              setApi={setApi}
-              className="w-full"
-              opts={{
-                align: "center",
-                dragFree: false,
-                skipSnaps: false,
-              }}
-            >
-              <CarouselContent className="ml-0">
-                {STEPS.map((step, index) => {
-                  const StepComponent = step.component;
-                  return (
-                    <CarouselItem key={step.id} className="pl-0 basis-full">
-                      <div className="flex items-center justify-center min-h-[600px]">
-                        <div className="w-full animate-fade-in">
-                          <StepComponent
-                            data={wizardData}
-                            updateData={updateWizardData}
-                          />
-                        </div>
-                      </div>
-                    </CarouselItem>
-                  );
-                })}
-              </CarouselContent>
-            </Carousel>
-
-            {/* Navigation */}
-            <div className="flex justify-center mt-8 gap-4">
+        {/* Navigation */}
+        <div className="bg-background/60 backdrop-blur-sm border-b border-border/20 py-3">
+          <div className="container mx-auto px-4">
+            <div className="flex justify-center gap-4">
               <Button
                 variant="outline"
                 onClick={prevStep}
@@ -193,6 +164,39 @@ const YachtCharterWizard: React.FC = () => {
                 </Button>
               )}
             </div>
+          </div>
+        </div>
+
+        {/* Carousel Container */}
+        <div className="flex items-center justify-center min-h-[calc(100vh-140px)]">
+          <div className="w-full max-w-6xl mx-auto px-4 py-8">
+            <Carousel 
+              setApi={setApi}
+              className="w-full"
+              opts={{
+                align: "center",
+                dragFree: false,
+                skipSnaps: false,
+              }}
+            >
+              <CarouselContent className="ml-0">
+                {STEPS.map((step, index) => {
+                  const StepComponent = step.component;
+                  return (
+                    <CarouselItem key={step.id} className="pl-0 basis-full">
+                      <div className="flex items-center justify-center min-h-[600px]">
+                        <div className="w-full animate-fade-in">
+                          <StepComponent
+                            data={wizardData}
+                            updateData={updateWizardData}
+                          />
+                        </div>
+                      </div>
+                    </CarouselItem>
+                  );
+                })}
+              </CarouselContent>
+            </Carousel>
           </div>
         </div>
       </div>
