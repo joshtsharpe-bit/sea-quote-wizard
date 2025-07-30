@@ -1,13 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { ChevronLeft, ChevronRight, Anchor, Ship } from 'lucide-react';
+import { Carousel, CarouselContent, CarouselItem, CarouselApi } from '@/components/ui/carousel';
 import DestinationStep from './wizard/DestinationStep';
 import YachtTypeStep from './wizard/YachtTypeStep';
 import DurationGuestsStep from './wizard/DurationGuestsStep';
 import DateSelectionStep from './wizard/DateSelectionStep';
-import IncludedAmenitiesStep from './wizard/IncludedAmenitiesStep';
+import AmenitiesStep from './wizard/AmenitiesStep';
 import QuoteSummary from './wizard/QuoteSummary';
 
 export interface WizardData {
@@ -54,13 +55,14 @@ const STEPS = [
   { id: 'destination', title: 'Destination', component: NewDestinationStep },
   { id: 'yacht', title: 'Yacht & Guests', component: YachtTypeStep },
   { id: 'dates', title: 'Dates', component: DateSelectionStep },
-  { id: 'package', title: 'Package', component: IncludedAmenitiesStep },
+  { id: 'package', title: 'Package', component: AmenitiesStep },
   { id: 'quote', title: 'Your Quote', component: QuoteSummary },
   { id: 'broker', title: 'Book Charter', component: BrokerConsultationStep },
 ];
 
 const YachtCharterWizard: React.FC = () => {
   const [currentStep, setCurrentStep] = useState(0);
+  const [api, setApi] = useState<CarouselApi>();
   const [wizardData, setWizardData] = useState<WizardData>({
     hasChartered: undefined,
     destination: null,
@@ -76,28 +78,17 @@ const YachtCharterWizard: React.FC = () => {
 
   const nextStep = () => {
     if (currentStep < STEPS.length - 1) {
-      setCurrentStep(currentStep + 1);
-      setTimeout(() => {
-        // Scroll to just below the progress section for a smoother transition
-        const progressSection = document.querySelector('.progress-section');
-        if (progressSection) {
-          const offset = progressSection.getBoundingClientRect().bottom + window.scrollY + 20;
-          window.scrollTo({ top: offset, behavior: 'smooth' });
-        }
-      }, 100);
+      const newStep = currentStep + 1;
+      setCurrentStep(newStep);
+      api?.scrollTo(newStep);
     }
   };
 
   const prevStep = () => {
     if (currentStep > 0) {
-      setCurrentStep(currentStep - 1);
-      setTimeout(() => {
-        const progressSection = document.querySelector('.progress-section');
-        if (progressSection) {
-          const offset = progressSection.getBoundingClientRect().bottom + window.scrollY + 20;
-          window.scrollTo({ top: offset, behavior: 'smooth' });
-        }
-      }, 100);
+      const newStep = currentStep - 1;
+      setCurrentStep(newStep);
+      api?.scrollTo(newStep);
     }
   };
 
@@ -125,17 +116,54 @@ const YachtCharterWizard: React.FC = () => {
       )}
       
       <div className="flex-1 relative z-10">
-        <div className="container mx-auto px-4 py-8">
+        {/* Progress Bar */}
+        <div className="bg-background/80 backdrop-blur-sm border-b border-border/40 py-4 sticky top-0 z-20">
+          <div className="container mx-auto px-4">
+            <div className="flex items-center justify-between mb-2">
+              <div className="text-sm font-medium text-muted-foreground">
+                Step {currentStep + 1} of {STEPS.length}
+              </div>
+              <div className="text-sm font-medium text-primary">
+                {STEPS[currentStep].title}
+              </div>
+            </div>
+            <Progress value={progress} className="h-2" />
+          </div>
+        </div>
 
-          {/* Current Step */}
-          <CurrentStepComponent
-            data={wizardData}
-            updateData={updateWizardData}
-          />
+        {/* Carousel Container */}
+        <div className="flex items-center justify-center min-h-[calc(100vh-80px)]">
+          <div className="w-full max-w-6xl mx-auto px-4 py-8">
+            <Carousel 
+              setApi={setApi}
+              className="w-full"
+              opts={{
+                align: "center",
+                dragFree: false,
+                skipSnaps: false,
+              }}
+            >
+              <CarouselContent className="ml-0">
+                {STEPS.map((step, index) => {
+                  const StepComponent = step.component;
+                  return (
+                    <CarouselItem key={step.id} className="pl-0 basis-full">
+                      <div className="flex items-center justify-center min-h-[600px]">
+                        <div className="w-full animate-fade-in">
+                          <StepComponent
+                            data={wizardData}
+                            updateData={updateWizardData}
+                          />
+                        </div>
+                      </div>
+                    </CarouselItem>
+                  );
+                })}
+              </CarouselContent>
+            </Carousel>
 
-          {/* Navigation */}
-          {currentStep < STEPS.length - 1 && (
-            <div className="flex justify-between mt-8">
+            {/* Navigation */}
+            <div className="flex justify-center mt-8 gap-4">
               <Button
                 variant="outline"
                 onClick={prevStep}
@@ -145,16 +173,27 @@ const YachtCharterWizard: React.FC = () => {
                 <ChevronLeft className="h-4 w-4 mr-2" />
                 Previous
               </Button>
-              <Button
-                onClick={nextStep}
-                disabled={!canProceed()}
-                className="min-w-[120px] btn-3d bg-primary hover:bg-primary/90"
-              >
-                Next
-                <ChevronRight className="h-4 w-4 ml-2" />
-              </Button>
+              
+              {currentStep < STEPS.length - 1 ? (
+                <Button
+                  onClick={nextStep}
+                  disabled={!canProceed()}
+                  className="min-w-[120px] btn-3d bg-primary hover:bg-primary/90"
+                >
+                  Next
+                  <ChevronRight className="h-4 w-4 ml-2" />
+                </Button>
+              ) : (
+                <Button
+                  onClick={() => {/* Handle final submission */}}
+                  disabled={!canProceed()}
+                  className="min-w-[120px] btn-3d bg-accent hover:bg-accent/90"
+                >
+                  Complete Charter
+                </Button>
+              )}
             </div>
-          )}
+          </div>
         </div>
       </div>
     </div>
