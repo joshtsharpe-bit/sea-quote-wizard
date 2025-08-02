@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
-import { Crown, Users, Utensils, Shield, Waves, Wind, Snowflake, Check } from 'lucide-react';
+import { Crown, Users, Utensils, Shield, Waves, Wind, Snowflake, Check, DollarSign, AlertTriangle } from 'lucide-react';
 import { WizardData } from '../YachtCharterWizard';
 
 interface IncludedAmenitiesStepProps {
@@ -104,6 +104,14 @@ const IncludedAmenitiesStep: React.FC<IncludedAmenitiesStepProps> = ({ data, upd
                   <p className="text-sm text-muted-foreground">
                     {isBareboatCharter ? 'Bareboat (self-skippered)' : 'Fully Crewed Charter'}
                   </p>
+                  {isBareboatCharter && (
+                    <div className="flex items-center gap-2 mt-2">
+                      <DollarSign className="h-4 w-4 text-green-600" />
+                      <span className="text-sm font-medium text-green-600">
+                        Reduced pricing - crew and meal costs not included
+                      </span>
+                    </div>
+                  )}
                 </div>
                 <Switch
                   checked={isBareboatCharter}
@@ -111,6 +119,26 @@ const IncludedAmenitiesStep: React.FC<IncludedAmenitiesStepProps> = ({ data, upd
                 />
                 <span className="text-sm text-muted-foreground">Bareboat</span>
               </div>
+
+              {isBareboatCharter && (
+                <div className="mt-4 p-4 rounded-lg bg-amber-50 border border-amber-200 dark:bg-amber-900/20 dark:border-amber-800">
+                  <div className="flex items-start gap-3">
+                    <AlertTriangle className="h-5 w-5 text-amber-600 mt-0.5 flex-shrink-0" />
+                    <div>
+                      <h5 className="font-semibold text-amber-800 dark:text-amber-200 mb-2">
+                        Bareboat Charter Requirements
+                      </h5>
+                      <ul className="text-sm text-amber-700 dark:text-amber-300 space-y-1">
+                        <li>• Valid sailing license or certification</li>
+                        <li>• Demonstrated sailing experience (log book)</li>
+                        <li>• Security deposit required</li>
+                        <li>• Responsibility for navigation and boat operation</li>
+                        <li>• Must provision own food and beverages</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </CardContent>
@@ -152,24 +180,6 @@ const IncludedAmenitiesStep: React.FC<IncludedAmenitiesStepProps> = ({ data, upd
         ))}
       </div>
 
-      <Card className="mt-8 glass border-primary/20 bg-gradient-card">
-        <CardContent className="p-6">
-          <div className="text-center">
-            <h3 className="text-lg font-semibold mb-2">
-              {isBareboatCharter ? 'Bareboat Charter' : 'Fully Crewed Charter'}
-            </h3>
-            <div className="text-3xl font-bold text-primary mb-2">
-              All-Inclusive Package
-            </div>
-            <p className="text-muted-foreground text-sm mb-4">
-              {isBareboatCharter 
-                ? 'Self-skippered with boat, insurance, and essential amenities'
-                : 'Complete luxury experience with crew, meals, and all amenities'
-              }
-            </p>
-          </div>
-        </CardContent>
-      </Card>
     </div>
   );
 };
