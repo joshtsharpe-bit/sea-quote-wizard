@@ -42,15 +42,18 @@ const QuoteSummary: React.FC<QuoteSummaryProps> = ({ data, onNext }) => {
   const [email, setEmail] = useState('');
   const { toast } = useToast();
 
-  const getBasePrice = () => {
+  const getSubtotal = () => {
     if (!data.destination || !data.yachtType) return 0;
-    const basePrice = data.destination.basePrice * data.yachtType.priceMultiplier * data.duration;
-    const bareboatDiscount = data.isBareboatCharter ? 0.4 : 0; // 40% discount for bareboat
-    return Math.round(basePrice * (1 - bareboatDiscount));
+    return Math.round(data.destination.basePrice * data.yachtType.priceMultiplier * data.duration);
+  };
+
+  const getBareboatDiscountAmount = () => {
+    if (!data.isBareboatCharter) return 0;
+    return Math.round(getSubtotal() * 0.4); // 40% discount
   };
 
   const getTotalPrice = () => {
-    return getBasePrice();
+    return getSubtotal() - getBareboatDiscountAmount();
   };
 
   const getDurationText = (days: number) => {
@@ -93,7 +96,7 @@ const QuoteSummary: React.FC<QuoteSummaryProps> = ({ data, onNext }) => {
             <div className="inline-flex items-center justify-center w-16 h-16 bg-primary/10 rounded-full mb-4">
               <Check className="h-8 w-8 text-primary" />
             </div>
-            <h1 className="text-3xl font-bold text-foreground mb-2">
+            <h1 className="text-3xl font-elegant text-foreground mb-2">
               Your Yacht Charter Quote
             </h1>
             <p className="text-muted-foreground">
@@ -116,7 +119,7 @@ const QuoteSummary: React.FC<QuoteSummaryProps> = ({ data, onNext }) => {
         {/* Charter Details */}
         <Card className="glass">
           <CardHeader>
-            <CardTitle>Charter Details</CardTitle>
+            <CardTitle className="font-elegant">Charter Details</CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
             {/* Destination */}
@@ -176,31 +179,45 @@ const QuoteSummary: React.FC<QuoteSummaryProps> = ({ data, onNext }) => {
         {/* Price Breakdown */}
         <Card className="glass">
           <CardHeader>
-            <CardTitle>Price Breakdown</CardTitle>
+            <CardTitle className="font-elegant">Price Breakdown</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="flex justify-between">
-              <span>Base price</span>
+            <div className="flex justify-between text-sm">
+              <span className="text-muted-foreground">Base Charter Rate</span>
               <span>${data.destination?.basePrice.toLocaleString()}/week</span>
             </div>
-            <div className="flex justify-between">
-              <span>Yacht multiplier</span>
-              <span>{data.yachtType?.priceMultiplier}x</span>
+            <div className="flex justify-between text-sm">
+              <span className="text-muted-foreground">Yacht Premium ({data.yachtType?.name})</span>
+              <span>{data.yachtType?.priceMultiplier}x multiplier</span>
             </div>
-            <div className="flex justify-between">
-              <span>Duration</span>
-              <span>{data.duration} nights</span>
+            <div className="flex justify-between text-sm">
+              <span className="text-muted-foreground">Duration</span>
+              <span>{data.duration} days ({Math.round(data.duration / 7 * 10) / 10} weeks)</span>
             </div>
+            
+            <Separator className="my-3" />
+            
+            <div className="flex justify-between font-medium">
+              <span>Subtotal</span>
+              <span>${getSubtotal().toLocaleString()}</span>
+            </div>
+
             {data.isBareboatCharter && (
-              <div className="flex justify-between text-green-600">
-                <span>Bareboat discount</span>
-                <span>-40%</span>
-              </div>
+              <>
+                <div className="flex justify-between text-emerald-600 font-medium bg-emerald-50 dark:bg-emerald-950/30 px-3 py-2 rounded-lg">
+                  <span>Bareboat Discount (40%)</span>
+                  <span>-${getBareboatDiscountAmount().toLocaleString()}</span>
+                </div>
+                <div className="text-xs text-muted-foreground px-3">
+                  <p className="mb-1">✓ You save on crew, provisions, and service fees</p>
+                  <p>⚠️ Sailing certification and self-provisioning required</p>
+                </div>
+              </>
             )}
             
-            <Separator />
+            <Separator className="my-4" />
             
-            <div className="flex justify-between text-lg font-bold">
+            <div className="flex justify-between text-xl font-bold font-elegant">
               <span>Total Estimated Cost</span>
               <span className="text-primary">${getTotalPrice().toLocaleString()}</span>
             </div>
@@ -215,12 +232,12 @@ const QuoteSummary: React.FC<QuoteSummaryProps> = ({ data, onNext }) => {
 
       {/* Contact Form */}
       <Card className="mt-6 glass">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Mail className="h-5 w-5 text-primary" />
-            Get Your Detailed Quote
-          </CardTitle>
-        </CardHeader>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 font-elegant">
+              <Mail className="h-5 w-5 text-primary" />
+              Get Your Detailed Quote
+            </CardTitle>
+          </CardHeader>
         <CardContent>
           <p className="text-muted-foreground mb-4">
             Ready to book? Enter your email to receive a detailed quote and start planning your dream yacht charter.
