@@ -2,130 +2,130 @@
 @tailwind components;
 @tailwind utilities;
 
-/* KŌKAI Charters Design System - Vintage Summer Elegance
-Royal Old Money Beach Vibes - Nostalgic Summer Aesthetic
+/* KŌKAI Charters Design System - Nautical Elegance
+Navy, Sand & Ocean Palette - Modern Maritime Luxury
 All colors MUST be HSL.
 */
 
 @layer base {
   :root {
-    /* Vintage Summer Color Palette - Higher Contrast, Less Bright */
-    --background: 40 15% 92%;          /* Muted warm cream */
-    --foreground: 20 30% 15%;          /* Much darker brown */
+    /* KŌKAI Brand Color Palette */
+    --background: 45 25% 92%;          /* Warm sand cream */
+    --foreground: 210 100% 8%;         /* Deep navy */
 
     /* Card and surface colors */
-    --card: 38 20% 95%;                /* Subtle warm ivory */
-    --card-foreground: 20 30% 15%;
+    --card: 45 20% 96%;                /* Light sand */
+    --card-foreground: 210 100% 8%;
 
-    --popover: 38 20% 95%;
-    --popover-foreground: 20 30% 15%;
+    --popover: 45 20% 96%;
+    --popover-foreground: 210 100% 8%;
 
-    /* Primary brand colors - Deeper, more muted */
-    --primary: 200 65% 25%;            /* Much deeper ocean blue */
-    --primary-foreground: 38 20% 95%;
-    --primary-glow: 200 55% 35%;       /* Muted ocean blue */
+    /* Primary brand colors - Navy Blue */
+    --primary: 210 100% 12%;           /* KŌKAI Navy */
+    --primary-foreground: 45 25% 92%;
+    --primary-glow: 210 80% 20%;       /* Lighter navy */
 
-    /* Secondary - More muted sand */
-    --secondary: 30 35% 60%;           /* Muted sand beige */
-    --secondary-foreground: 20 35% 20%;
+    /* Secondary - Sand/Cream */
+    --secondary: 45 30% 78%;           /* KŌKAI Sand */
+    --secondary-foreground: 210 100% 8%;
 
-    /* Muted - Better contrast */
-    --muted: 35 15% 85%;               /* Muted warm cream */
-    --muted-foreground: 25 20% 40%;    /* Darker warm gray */
+    /* Muted - Soft neutrals */
+    --muted: 40 15% 88%;               /* Soft cream */
+    --muted-foreground: 210 50% 25%;   /* Muted navy */
 
-    /* Accent - Muted coral */
-    --accent: 20 50% 45%;              /* Muted coral */
-    --accent-foreground: 38 20% 95%;
+    /* Accent - Teal */
+    --accent: 180 25% 45%;             /* KŌKAI Teal */
+    --accent-foreground: 45 25% 92%;
 
     /* Destructive */
     --destructive: 0 70% 50%;
     --destructive-foreground: 42 40% 97%;
 
-    /* Borders and inputs - Better contrast */
-    --border: 35 20% 70%;              /* Stronger border */
-    --input: 35 20% 88%;
-    --ring: 200 65% 25%;
+    /* Borders and inputs */
+    --border: 210 30% 75%;             /* Light navy border */
+    --input: 45 15% 90%;
+    --ring: 210 100% 12%;
 
     --radius: 0.875rem;
 
-    /* Muted vintage gradients - Less bright */
+    /* KŌKAI brand gradients */
     --gradient-ocean: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--primary-glow)) 100%);
-    --gradient-hero: linear-gradient(180deg, hsl(40 15% 90%) 0%, hsl(35 20% 82%) 100%);
-    --gradient-card: linear-gradient(145deg, hsl(var(--card)) 0%, hsl(35 15% 88%) 100%);
-    --gradient-sunset: linear-gradient(135deg, hsl(20 50% 45%) 0%, hsl(30 45% 50%) 50%, hsl(40 40% 55%) 100%);
-    --gradient-vintage: linear-gradient(135deg, hsl(200 65% 25%) 0%, hsl(20 50% 45%) 100%);
-    --gradient-warm: linear-gradient(145deg, hsl(42 40% 97%) 0%, hsl(35 50% 90%) 100%);
+    --gradient-hero: linear-gradient(180deg, hsl(45 25% 94%) 0%, hsl(45 20% 88%) 100%);
+    --gradient-card: linear-gradient(145deg, hsl(var(--card)) 0%, hsl(45 15% 90%) 100%);
+    --gradient-sunset: linear-gradient(135deg, hsl(180 25% 45%) 0%, hsl(45 30% 78%) 50%, hsl(200 80% 75%) 100%);
+    --gradient-vintage: linear-gradient(135deg, hsl(210 100% 12%) 0%, hsl(180 25% 45%) 100%);
+    --gradient-warm: linear-gradient(145deg, hsl(45 20% 96%) 0%, hsl(45 25% 92%) 100%);
     
-    /* Vintage warm shadows */
-    --shadow-soft: 0 4px 20px hsl(25 30% 40% / 0.08);
-    --shadow-medium: 0 8px 30px hsl(25 30% 40% / 0.12);
-    --shadow-large: 0 20px 50px hsl(25 30% 40% / 0.15);
-    --shadow-vintage: 0 6px 25px hsl(195 85% 32% / 0.12);
-    --shadow-warm: 0 8px 30px hsl(25 70% 62% / 0.15);
-    --shadow-glow: 0 0 40px hsl(25 70% 62% / 0.2);
+    /* KŌKAI elegant shadows */
+    --shadow-soft: 0 4px 20px hsl(210 50% 20% / 0.08);
+    --shadow-medium: 0 8px 30px hsl(210 50% 20% / 0.12);
+    --shadow-large: 0 20px 50px hsl(210 50% 20% / 0.15);
+    --shadow-vintage: 0 6px 25px hsl(210 100% 12% / 0.12);
+    --shadow-warm: 0 8px 30px hsl(180 25% 45% / 0.15);
+    --shadow-glow: 0 0 40px hsl(180 25% 45% / 0.2);
     
     /* Elegant transitions */
     --transition-smooth: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     --transition-vintage: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
     
-    /* Sidebar - Vintage theme */
-    --sidebar-background: 40 35% 92%;
-    --sidebar-foreground: 25 25% 20%;
-    --sidebar-primary: 195 85% 32%;
-    --sidebar-primary-foreground: 42 40% 97%;
-    --sidebar-accent: 40 30% 85%;
-    --sidebar-accent-foreground: 25 25% 20%;
-    --sidebar-border: 40 30% 82%;
-    --sidebar-ring: 195 85% 32%;
+    /* Sidebar - KŌKAI theme */
+    --sidebar-background: 45 20% 96%;
+    --sidebar-foreground: 210 100% 8%;
+    --sidebar-primary: 210 100% 12%;
+    --sidebar-primary-foreground: 45 20% 96%;
+    --sidebar-accent: 45 15% 90%;
+    --sidebar-accent-foreground: 210 100% 8%;
+    --sidebar-border: 210 30% 75%;
+    --sidebar-ring: 210 100% 12%;
   }
 
   .dark {
-    /* Dark Theme - Vintage Moonlit Beach */
-    --background: 25 25% 8%;           /* Deep warm brown */
-    --foreground: 45 30% 92%;          /* Warm cream */
+    /* Dark Theme - KŌKAI Night */
+    --background: 210 80% 4%;          /* Deep navy */
+    --foreground: 45 25% 92%;          /* Light sand */
 
-    --card: 25 30% 12%;                /* Rich dark brown */
-    --card-foreground: 45 30% 92%;
+    --card: 210 70% 8%;                /* Dark navy card */
+    --card-foreground: 45 25% 92%;
 
-    --popover: 25 30% 12%;
-    --popover-foreground: 45 30% 92%;
+    --popover: 210 70% 8%;
+    --popover-foreground: 45 25% 92%;
 
-    --primary: 195 75% 55%;            /* Moonlit ocean blue */
-    --primary-foreground: 25 30% 12%;
-    --primary-glow: 195 70% 65%;
+    --primary: 200 80% 75%;            /* Light blue */
+    --primary-foreground: 210 80% 4%;
+    --primary-glow: 200 70% 65%;
 
-    --secondary: 35 35% 20%;           /* Dark sand */
-    --secondary-foreground: 45 30% 85%;
+    --secondary: 45 20% 25%;           /* Dark sand */
+    --secondary-foreground: 45 25% 92%;
 
-    --muted: 30 20% 18%;               /* Dark warm gray */
-    --muted-foreground: 40 20% 65%;
+    --muted: 210 40% 15%;              /* Dark navy muted */
+    --muted-foreground: 45 15% 70%;
 
-    --accent: 25 60% 50%;              /* Muted coral */
-    --accent-foreground: 45 30% 92%;
+    --accent: 180 30% 60%;             /* Light teal */
+    --accent-foreground: 210 80% 4%;
 
     --destructive: 0 65% 45%;
     --destructive-foreground: 45 30% 92%;
 
-    --border: 30 25% 22%;
-    --input: 30 25% 22%;
-    --ring: 195 75% 55%;
+    --border: 210 30% 25%;
+    --input: 210 30% 25%;
+    --ring: 200 80% 75%;
     
-    /* Dark vintage gradients */
+    /* Dark KŌKAI gradients */
     --gradient-ocean: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--primary-glow)) 100%);
-    --gradient-hero: linear-gradient(180deg, hsl(25 25% 8%) 0%, hsl(25 30% 14%) 100%);
-    --gradient-card: linear-gradient(145deg, hsl(var(--card)) 0%, hsl(30 30% 15%) 100%);
-    --gradient-sunset: linear-gradient(135deg, hsl(25 60% 30%) 0%, hsl(35 65% 35%) 50%, hsl(45 55% 40%) 100%);
-    --gradient-vintage: linear-gradient(135deg, hsl(195 75% 45%) 0%, hsl(25 60% 40%) 100%);
-    --gradient-warm: linear-gradient(145deg, hsl(25 30% 12%) 0%, hsl(30 30% 18%) 100%);
+    --gradient-hero: linear-gradient(180deg, hsl(210 80% 4%) 0%, hsl(210 70% 8%) 100%);
+    --gradient-card: linear-gradient(145deg, hsl(var(--card)) 0%, hsl(210 60% 12%) 100%);
+    --gradient-sunset: linear-gradient(135deg, hsl(180 30% 40%) 0%, hsl(45 20% 50%) 50%, hsl(200 70% 65%) 100%);
+    --gradient-vintage: linear-gradient(135deg, hsl(200 80% 75%) 0%, hsl(180 30% 60%) 100%);
+    --gradient-warm: linear-gradient(145deg, hsl(210 70% 8%) 0%, hsl(210 60% 12%) 100%);
     
-    --sidebar-background: 25 30% 12%;
-    --sidebar-foreground: 45 30% 92%;
-    --sidebar-primary: 195 75% 55%;
-    --sidebar-primary-foreground: 25 30% 12%;
-    --sidebar-accent: 30 25% 22%;
-    --sidebar-accent-foreground: 45 30% 92%;
-    --sidebar-border: 30 25% 22%;
-    --sidebar-ring: 25 60% 50%;
+    --sidebar-background: 210 70% 8%;
+    --sidebar-foreground: 45 25% 92%;
+    --sidebar-primary: 200 80% 75%;
+    --sidebar-primary-foreground: 210 70% 8%;
+    --sidebar-accent: 210 30% 25%;
+    --sidebar-accent-foreground: 45 25% 92%;
+    --sidebar-border: 210 30% 25%;
+    --sidebar-ring: 180 30% 60%;
   }
 }
 

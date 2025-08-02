@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { ChevronLeft, ChevronRight, Anchor, Ship } from 'lucide-react';
+import KokaiLogo from './KokaiLogo';
 import { Carousel, CarouselContent, CarouselItem, CarouselApi } from '@/components/ui/carousel';
 import DestinationStep from './wizard/DestinationStep';
 import YachtTypeStep from './wizard/YachtTypeStep';
@@ -115,6 +116,11 @@ const YachtCharterWizard: React.FC = () => {
   return (
     <div className="min-h-screen bg-gradient-hero">
       <div className="container mx-auto px-4 py-8">
+        {/* Header with Logo */}
+        <div className="flex justify-center mb-8">
+          <KokaiLogo size="lg" className="text-center" />
+        </div>
+        
         {/* Tab Navigation */}
         <div className="bg-background/80 backdrop-blur-sm border border-border/40 rounded-lg p-6 mb-8 glass">
           <div className="flex flex-wrap justify-center gap-2">
