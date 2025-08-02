@@ -92,13 +92,13 @@ const IncludedAmenitiesStep: React.FC<IncludedAmenitiesStepProps> = ({ data, upd
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex justify-between items-start gap-6">
-            <div className="flex-1">
+          <div className="flex items-start gap-6">
+            <div className="w-96">
               <p className="text-muted-foreground text-lg mb-4">
                 Everything you need for the perfect charter experience is included
               </p>
               
-              <div className="flex items-center space-x-3 p-4 rounded-lg bg-secondary/20">
+              <div className="flex items-center space-x-3 p-3 rounded-lg bg-secondary/20">
                 <div className="flex-1">
                   <h4 className="font-semibold text-foreground">Charter Type</h4>
                   <p className="text-sm text-muted-foreground">
