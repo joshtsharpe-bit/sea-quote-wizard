@@ -197,15 +197,15 @@ const WhereAndWhyStep: React.FC<WhereAndWhyStepProps> = ({ data, updateData }) =
                   <CarouselItem key={reason.id} className="pl-2 basis-1/2">
                     <Button
                       variant={selectedReasons.includes(reason.id) ? "default" : "outline"}
-                      className={`h-auto p-3 flex flex-col items-center gap-2 btn-3d w-full ${
+                      className={`min-h-[100px] p-3 flex flex-col items-center justify-center gap-2 btn-3d w-full ${
                         selectedReasons.includes(reason.id) ? 'bg-primary hover:bg-primary/90' : ''
                       }`}
                       onClick={() => handleReasonToggle(reason.id)}
                     >
-                      <reason.icon className="h-5 w-5" />
-                      <div className="text-center">
-                        <div className="font-medium text-sm">{reason.label}</div>
-                        <div className="text-xs text-muted-foreground mt-1 leading-relaxed">{reason.description}</div>
+                      <reason.icon className="h-5 w-5 flex-shrink-0" />
+                      <div className="text-center space-y-1">
+                        <div className="font-medium text-sm leading-tight">{reason.label}</div>
+                        <div className="text-xs text-muted-foreground leading-relaxed">{reason.description}</div>
                       </div>
                     </Button>
                   </CarouselItem>
@@ -222,15 +222,15 @@ const WhereAndWhyStep: React.FC<WhereAndWhyStepProps> = ({ data, updateData }) =
               <Button
                 key={reason.id}
                 variant={selectedReasons.includes(reason.id) ? "default" : "outline"}
-                className={`h-auto p-4 flex flex-col items-center gap-2 btn-3d ${
+                className={`min-h-[120px] p-4 flex flex-col items-center justify-center gap-3 btn-3d ${
                   selectedReasons.includes(reason.id) ? 'bg-primary hover:bg-primary/90' : ''
                 }`}
                 onClick={() => handleReasonToggle(reason.id)}
               >
-                <reason.icon className="h-6 w-6" />
-                <div className="text-center">
-                  <div className="font-medium text-sm">{reason.label}</div>
-                  <div className="text-xs text-muted-foreground mt-1 leading-relaxed">{reason.description}</div>
+                <reason.icon className="h-6 w-6 flex-shrink-0" />
+                <div className="text-center space-y-2">
+                  <div className="font-medium text-sm leading-tight">{reason.label}</div>
+                  <div className="text-xs text-muted-foreground leading-relaxed">{reason.description}</div>
                 </div>
               </Button>
             ))}
