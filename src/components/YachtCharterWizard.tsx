@@ -21,6 +21,7 @@ export interface WizardData {
     countries?: string[];
   } | null;
   yachtType: {
+    id?: string;
     name: string;
     type: string;
     image: string;
@@ -33,6 +34,9 @@ export interface WizardData {
   endDate?: string;
   isBareboatCharter?: boolean;
   amenities: string[];
+  reasons?: string[];
+  guestTypes?: string[];
+  budgetRange?: [number, number];
   contactDetails?: {
     firstName: string;
     lastName: string;
@@ -45,160 +49,141 @@ export interface WizardData {
   consultationRequested?: boolean;
 }
 
-import WelcomeStep from './wizard/WelcomeStep';
-import NewDestinationStep from './wizard/NewDestinationStep';
-import LiveQuoteSidebar from './wizard/LiveQuoteSidebar';
-import BrokerConsultationStep from './wizard/BrokerConsultationStep';
+import WhereAndWhyStep from './wizard/WhereAndWhyStep';
+import DatesAndDurationStep from './wizard/DatesAndDurationStep';
+import GuestsAndTypeStep from './wizard/GuestsAndTypeStep';
+import BudgetAndYachtStep from './wizard/BudgetAndYachtStep';
+import ContactAndQuoteStep from './wizard/ContactAndQuoteStep';
 
 const STEPS = [
-  { id: 'welcome', title: 'Welcome', component: WelcomeStep },
-  { id: 'destination', title: 'Destination', component: NewDestinationStep },
-  { id: 'yacht', title: 'Yacht & Guests', component: YachtTypeStep },
-  { id: 'dates', title: 'Dates', component: DateSelectionStep },
+  { id: 'where-why', title: 'Where & Why', component: WhereAndWhyStep },
+  { id: 'dates-duration', title: 'Dates & Duration', component: DatesAndDurationStep },
+  { id: 'guests-type', title: 'Guests & Type', component: GuestsAndTypeStep },
+  { id: 'budget-yacht', title: 'Budget & Yacht', component: BudgetAndYachtStep },
   { id: 'package', title: 'Package', component: IncludedAmenitiesStep },
-  { id: 'quote', title: 'Your Quote', component: QuoteSummary },
-  { id: 'broker', title: 'Book Charter', component: BrokerConsultationStep },
+  { id: 'contact-quote', title: 'Contact & Quote', component: ContactAndQuoteStep },
 ];
 
 const YachtCharterWizard: React.FC = () => {
   const [currentStep, setCurrentStep] = useState(0);
-  const [api, setApi] = useState<CarouselApi>();
   const [wizardData, setWizardData] = useState<WizardData>({
-    hasChartered: undefined,
     destination: null,
     yachtType: null,
     guests: 4,
     duration: 7,
     amenities: [],
+    reasons: [],
+    guestTypes: [],
+    budgetRange: [20000, 50000],
   });
 
   const updateWizardData = (updates: Partial<WizardData>) => {
     setWizardData(prev => ({ ...prev, ...updates }));
   };
 
-  const nextStep = () => {
-    if (currentStep < STEPS.length - 1) {
-      const newStep = currentStep + 1;
-      setCurrentStep(newStep);
-      api?.scrollTo(newStep);
+  const goToStep = (stepIndex: number) => {
+    if (stepIndex <= currentStep || canProceedToStep(stepIndex)) {
+      setCurrentStep(stepIndex);
     }
   };
 
-  const prevStep = () => {
-    if (currentStep > 0) {
-      const newStep = currentStep - 1;
-      setCurrentStep(newStep);
-      api?.scrollTo(newStep);
-    }
+  const canProceedToStep = (stepIndex: number) => {
+    // Allow going to any previous step or the next step if current is complete
+    if (stepIndex <= currentStep) return true;
+    if (stepIndex === currentStep + 1) return canProceed();
+    return false;
   };
 
   const canProceed = () => {
     switch (currentStep) {
-      case 0: return wizardData.hasChartered !== undefined;
-      case 1: return !!wizardData.destination;
-      case 2: return !!wizardData.yachtType && wizardData.guests > 0;
-      case 3: return wizardData.startDate && wizardData.endDate && wizardData.duration >= 5;
+      case 0: return !!wizardData.destination && wizardData.reasons && wizardData.reasons.length > 0;
+      case 1: return wizardData.startDate && wizardData.endDate && wizardData.duration >= 5;
+      case 2: return wizardData.guests > 0 && wizardData.guestTypes && wizardData.guestTypes.length > 0;
+      case 3: return !!wizardData.yachtType && wizardData.budgetRange;
       case 4: return true;
-      case 5: return true;
-      case 6: return true;
+      case 5: return wizardData.contactDetails?.firstName && wizardData.contactDetails?.lastName && 
+               wizardData.contactDetails?.email && wizardData.contactDetails?.phone;
       default: return false;
     }
   };
 
   const CurrentStepComponent = STEPS[currentStep].component;
-  const progress = ((currentStep + 1) / STEPS.length) * 100;
 
   return (
-    <div className="min-h-screen bg-gradient-hero relative flex">
-      {/* Live Quote Sidebar - only show after welcome step */}
-      {currentStep > 0 && (
-        <LiveQuoteSidebar data={wizardData} currentStep={currentStep} />
-      )}
-      
-      <div className="flex-1 relative z-10">
-        {/* Progress Bar */}
-        <div className="bg-background/80 backdrop-blur-sm border-b border-border/40 py-4 sticky top-0 z-20">
-          <div className="container mx-auto px-4">
-            <div className="flex items-center justify-between mb-2">
-              <div className="text-sm font-medium text-muted-foreground">
-                Step {currentStep + 1} of {STEPS.length}
-              </div>
-              <div className="text-sm font-medium text-primary">
-                {STEPS[currentStep].title}
-              </div>
-            </div>
-            <Progress value={progress} className="h-2" />
-          </div>
-        </div>
-
-        {/* Navigation */}
-        <div className="bg-background/60 backdrop-blur-sm border-b border-border/20 py-3">
-          <div className="container mx-auto px-4">
-            <div className="flex justify-center gap-4">
-              <Button
-                variant="outline"
-                onClick={prevStep}
-                disabled={currentStep === 0}
-                className="min-w-[120px] btn-3d"
-              >
-                <ChevronLeft className="h-4 w-4 mr-2" />
-                Previous
-              </Button>
+    <div className="min-h-screen bg-gradient-hero">
+      <div className="container mx-auto px-4 py-8">
+        {/* Tab Navigation */}
+        <div className="bg-background/80 backdrop-blur-sm border border-border/40 rounded-lg p-6 mb-8 glass">
+          <div className="flex flex-wrap justify-center gap-2">
+            {STEPS.map((step, index) => {
+              const isCompleted = index < currentStep;
+              const isCurrent = index === currentStep;
+              const isAccessible = index <= currentStep || canProceedToStep(index);
               
-              {currentStep < STEPS.length - 1 ? (
+              return (
                 <Button
-                  onClick={nextStep}
-                  disabled={!canProceed()}
-                  className="min-w-[120px] btn-3d bg-primary hover:bg-primary/90"
+                  key={step.id}
+                  variant={isCurrent ? "default" : isCompleted ? "secondary" : "outline"}
+                  className={`btn-3d transition-all ${
+                    isAccessible ? 'cursor-pointer' : 'cursor-not-allowed opacity-50'
+                  } ${isCurrent ? 'ring-2 ring-primary' : ''}`}
+                  onClick={() => isAccessible && goToStep(index)}
+                  disabled={!isAccessible}
                 >
-                  Next
-                  <ChevronRight className="h-4 w-4 ml-2" />
+                  <div className="flex items-center gap-2">
+                    <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${
+                      isCurrent ? 'bg-primary-foreground text-primary' : 
+                      isCompleted ? 'bg-primary text-primary-foreground' : 
+                      'bg-muted text-muted-foreground'
+                    }`}>
+                      {isCompleted ? '✓' : index + 1}
+                    </div>
+                    <span className="font-medium">{step.title}</span>
+                  </div>
                 </Button>
-              ) : (
-                <Button
-                  onClick={() => {/* Handle final submission */}}
-                  disabled={!canProceed()}
-                  className="min-w-[120px] btn-3d bg-accent hover:bg-accent/90"
-                >
-                  Complete Charter
-                </Button>
-              )}
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Step Content */}
+        <div className="flex justify-center">
+          <div className="w-full max-w-6xl">
+            <div className="animate-fade-in">
+              <CurrentStepComponent
+                data={wizardData}
+                updateData={updateWizardData}
+              />
             </div>
           </div>
         </div>
 
-        {/* Carousel Container */}
-        <div className="flex items-center justify-center min-h-[calc(100vh-140px)]">
-          <div className="w-full max-w-6xl mx-auto px-4 py-8">
-            <Carousel 
-              setApi={setApi}
-              className="w-full"
-              opts={{
-                align: "center",
-                dragFree: false,
-                skipSnaps: false,
-              }}
+        {/* Action Button */}
+        {canProceed() && currentStep < STEPS.length - 1 && (
+          <div className="flex justify-center mt-8">
+            <Button
+              onClick={() => setCurrentStep(currentStep + 1)}
+              className="btn-3d bg-primary hover:bg-primary/90 px-8 py-3 text-lg"
+              size="lg"
             >
-              <CarouselContent className="ml-0">
-                {STEPS.map((step, index) => {
-                  const StepComponent = step.component;
-                  return (
-                    <CarouselItem key={step.id} className="pl-0 basis-full">
-                      <div className="flex items-center justify-center min-h-[600px]">
-                        <div className="w-full animate-fade-in">
-                          <StepComponent
-                            data={wizardData}
-                            updateData={updateWizardData}
-                          />
-                        </div>
-                      </div>
-                    </CarouselItem>
-                  );
-                })}
-              </CarouselContent>
-            </Carousel>
+              Continue to {STEPS[currentStep + 1].title}
+              <ChevronRight className="h-5 w-5 ml-2" />
+            </Button>
           </div>
-        </div>
+        )}
+
+        {currentStep === STEPS.length - 1 && (
+          <div className="flex justify-center mt-8">
+            <Button
+              onClick={() => {/* Handle final submission */}}
+              className="btn-3d bg-accent hover:bg-accent/90 px-8 py-3 text-lg"
+              size="lg"
+            >
+              Get Your Quote
+              <Anchor className="h-5 w-5 ml-2" />
+            </Button>
+          </div>
+        )}
       </div>
     </div>
   );
