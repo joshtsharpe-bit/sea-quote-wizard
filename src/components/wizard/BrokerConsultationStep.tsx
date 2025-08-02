@@ -21,7 +21,7 @@ interface ContactDetails {
   preferredDate: string;
   preferredTime: string;
   specialRequests: string;
-  contactMethod: string;
+  contactMethods: string[];
   appointmentDate?: Date;
   appointmentTime: string;
 }
@@ -35,7 +35,7 @@ const BrokerConsultationStep: React.FC<BrokerConsultationStepProps> = ({ data, u
     preferredDate: '',
     preferredTime: '',
     specialRequests: '',
-    contactMethod: 'email',
+    contactMethods: ['email'],
     appointmentDate: undefined,
     appointmentTime: ''
   });

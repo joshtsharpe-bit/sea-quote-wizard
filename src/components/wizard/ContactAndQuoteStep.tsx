@@ -29,7 +29,7 @@ const ContactAndQuoteStep: React.FC<ContactAndQuoteStepProps> = ({
     preferredDate: '',
     preferredTime: '',
     specialRequests: '',
-    contactMethod: 'email',
+    contactMethods: ['email'],
     appointmentDate: undefined,
     appointmentTime: ''
   });
@@ -41,6 +41,31 @@ const ContactAndQuoteStep: React.FC<ContactAndQuoteStepProps> = ({
     const updated = {
       ...contactDetails,
       [field]: value
+    };
+    setContactDetails(updated);
+    updateData({
+      contactDetails: updated
+    });
+  };
+
+  const handleContactMethodToggle = (method: string) => {
+    const currentMethods = contactDetails.contactMethods || ['email'];
+    const isSelected = currentMethods.includes(method);
+    
+    let updatedMethods;
+    if (isSelected) {
+      // Remove method (but ensure at least one remains)
+      updatedMethods = currentMethods.length > 1 
+        ? currentMethods.filter(m => m !== method)
+        : currentMethods;
+    } else {
+      // Add method
+      updatedMethods = [...currentMethods, method];
+    }
+    
+    const updated = {
+      ...contactDetails,
+      contactMethods: updatedMethods
     };
     setContactDetails(updated);
     updateData({
@@ -82,13 +107,14 @@ const ContactAndQuoteStep: React.FC<ContactAndQuoteStepProps> = ({
   const estimatedPrice = calculateEstimatedPrice();
 
   const getContactMethodDisplay = () => {
-    if (contactDetails.contactMethod === 'email') {
-      return { icon: Mail, label: 'Email', color: 'text-blue-600' };
-    } else if (contactDetails.contactMethod === 'call') {
-      return { icon: Phone, label: 'Phone Call', color: 'text-green-600' };
-    } else {
-      return { icon: MessageSquare, label: 'Text Message', color: 'text-purple-600' };
-    }
+    const methods = contactDetails.contactMethods || ['email'];
+    const labels = methods.map(method => {
+      if (method === 'email') return 'email';
+      if (method === 'call') return 'phone call';
+      if (method === 'message') return 'text message';
+      return method;
+    });
+    return labels.join(' and ');
   };
 
   return (
@@ -200,7 +226,7 @@ const ContactAndQuoteStep: React.FC<ContactAndQuoteStepProps> = ({
         <CardContent className="space-y-6">
           {/* Contact Method Selection */}
           <div className="space-y-4">
-            <Label className="text-base font-medium">How would you like us to contact you? *</Label>
+            <Label className="text-base font-medium">How would you like us to contact you? * (Select all that apply)</Label>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {[
                 { value: 'email', icon: Mail, label: 'Email', desc: 'We\'ll send you yacht options via email' },
@@ -208,16 +234,17 @@ const ContactAndQuoteStep: React.FC<ContactAndQuoteStepProps> = ({
                 { value: 'message', icon: MessageSquare, label: 'Text Message', desc: 'Get updates via SMS' }
               ].map((method) => {
                 const IconComponent = method.icon;
+                const isSelected = (contactDetails.contactMethods || ['email']).includes(method.value);
                 return (
                   <div 
                     key={method.value}
                     className={cn(
                       "relative p-4 rounded-lg border-2 cursor-pointer transition-all hover:shadow-md",
-                      contactDetails.contactMethod === method.value 
+                      isSelected 
                         ? "border-primary bg-primary/5" 
                         : "border-border hover:border-primary/50"
                     )}
-                    onClick={() => handleContactChange('contactMethod', method.value)}
+                    onClick={() => handleContactMethodToggle(method.value)}
                   >
                     <div className="flex items-center gap-3 mb-2">
                       <IconComponent className="h-5 w-5 text-primary" />
@@ -225,11 +252,11 @@ const ContactAndQuoteStep: React.FC<ContactAndQuoteStepProps> = ({
                     </div>
                     <p className="text-sm text-muted-foreground">{method.desc}</p>
                     <input
-                      type="radio"
-                      name="contactMethod"
+                      type="checkbox"
+                      name="contactMethods"
                       value={method.value}
-                      checked={contactDetails.contactMethod === method.value}
-                      onChange={() => handleContactChange('contactMethod', method.value)}
+                      checked={isSelected}
+                      onChange={() => handleContactMethodToggle(method.value)}
                       className="absolute top-4 right-4"
                     />
                   </div>
@@ -277,7 +304,7 @@ const ContactAndQuoteStep: React.FC<ContactAndQuoteStepProps> = ({
           </div>
 
           {/* Phone - Required for call and message */}
-          {(contactDetails.contactMethod === 'call' || contactDetails.contactMethod === 'message') && (
+          {((contactDetails.contactMethods || ['email']).includes('call') || (contactDetails.contactMethods || ['email']).includes('message')) && (
             <div>
               <Label htmlFor="phone">Phone Number *</Label>
               <Input 
@@ -293,7 +320,7 @@ const ContactAndQuoteStep: React.FC<ContactAndQuoteStepProps> = ({
           )}
 
           {/* Call Scheduling */}
-          {contactDetails.contactMethod === 'call' && (
+          {(contactDetails.contactMethods || ['email']).includes('call') && (
             <div className="space-y-4">
               <Label className="text-base font-medium">Schedule Your Call *</Label>
               
@@ -391,9 +418,9 @@ const ContactAndQuoteStep: React.FC<ContactAndQuoteStepProps> = ({
                 <span className="text-accent font-bold">1</span>
               </div>
               <h4 className="font-medium mb-2">Broker Contact</h4>
-              <p className="text-sm text-muted-foreground">
-                A yacht charter specialist will contact you via {getContactMethodDisplay().label.toLowerCase()}.
-              </p>
+               <p className="text-sm text-muted-foreground">
+                 A yacht charter specialist will contact you via {getContactMethodDisplay()}.
+               </p>
             </div>
             
             <div className="text-center">

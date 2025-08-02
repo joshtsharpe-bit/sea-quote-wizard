@@ -45,7 +45,7 @@ export interface WizardData {
     preferredDate: string;
     preferredTime: string;
     specialRequests: string;
-    contactMethod: string;
+    contactMethods: string[];
     appointmentDate?: Date;
     appointmentTime: string;
   };
