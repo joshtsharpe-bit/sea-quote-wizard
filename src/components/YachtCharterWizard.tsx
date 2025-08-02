@@ -119,6 +119,7 @@ const YachtCharterWizard: React.FC = () => {
               const isCompleted = index < currentStep;
               const isCurrent = index === currentStep;
               const isAccessible = index <= currentStep || canProceedToStep(index);
+              const showTitle = index <= currentStep; // Only show title for completed or current steps
               
               return (
                 <Button
@@ -138,7 +139,7 @@ const YachtCharterWizard: React.FC = () => {
                     }`}>
                       {isCompleted ? '✓' : index + 1}
                     </div>
-                    <span className="font-medium">{step.title}</span>
+                    {showTitle && <span className="font-medium">{step.title}</span>}
                   </div>
                 </Button>
               );
@@ -160,9 +161,13 @@ const YachtCharterWizard: React.FC = () => {
 
         {/* Action Button */}
         {canProceed() && currentStep < STEPS.length - 1 && (
-          <div className="flex justify-center mt-8">
+          <div id="next-button" className="flex justify-center mt-8 animate-fade-in">
             <Button
-              onClick={() => setCurrentStep(currentStep + 1)}
+              onClick={() => {
+                setCurrentStep(currentStep + 1);
+                // Smooth scroll to top when proceeding
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
               className="btn-3d bg-primary hover:bg-primary/90 px-8 py-3 text-lg"
               size="lg"
             >
@@ -173,7 +178,7 @@ const YachtCharterWizard: React.FC = () => {
         )}
 
         {currentStep === STEPS.length - 1 && (
-          <div className="flex justify-center mt-8">
+          <div id="quote-button" className="flex justify-center mt-8 animate-fade-in">
             <Button
               onClick={() => {/* Handle final submission */}}
               className="btn-3d bg-accent hover:bg-accent/90 px-8 py-3 text-lg"

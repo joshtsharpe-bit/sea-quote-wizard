@@ -97,9 +97,9 @@ const ContactAndQuoteStep: React.FC<ContactAndQuoteStepProps> = ({ data, updateD
             </div>
             
             <div className="text-right">
-              <div className="text-sm text-muted-foreground mb-2">Estimated Total</div>
+              <div className="text-sm text-muted-foreground mb-2">Estimated Range</div>
               <div className="text-4xl font-bold text-primary mb-2">
-                ${estimatedPrice.toLocaleString()}
+                ${(estimatedPrice * 0.85).toLocaleString()} - ${(estimatedPrice * 1.15).toLocaleString()}
               </div>
               <div className="text-sm text-muted-foreground">
                 For {data.duration} nights • {data.guests} guests
