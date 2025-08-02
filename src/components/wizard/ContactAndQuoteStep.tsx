@@ -4,7 +4,12 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { User, Mail, Phone, Calendar, MessageSquare, DollarSign, Ship, MapPin, Users } from 'lucide-react';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Calendar } from '@/components/ui/calendar';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { User, Mail, Phone, Calendar as CalendarIcon, MessageSquare, DollarSign, Ship, MapPin, Users } from 'lucide-react';
+import { format } from 'date-fns';
+import { cn } from '@/lib/utils';
 import { WizardData } from '../YachtCharterWizard';
 interface ContactAndQuoteStepProps {
   data: WizardData;
@@ -21,9 +26,14 @@ const ContactAndQuoteStep: React.FC<ContactAndQuoteStepProps> = ({
     email: '',
     preferredDate: '',
     preferredTime: '',
-    specialRequests: ''
+    specialRequests: '',
+    contactMethod: 'email',
+    appointmentDate: undefined,
+    appointmentTime: ''
   });
-  const handleContactChange = (field: string, value: string) => {
+
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(contactDetails.appointmentDate);
+  const handleContactChange = (field: string, value: string | Date | undefined) => {
     const updated = {
       ...contactDetails,
       [field]: value
@@ -33,6 +43,17 @@ const ContactAndQuoteStep: React.FC<ContactAndQuoteStepProps> = ({
       contactDetails: updated
     });
   };
+
+  const handleDateSelect = (date: Date | undefined) => {
+    setSelectedDate(date);
+    handleContactChange('appointmentDate', date);
+  };
+
+  const timeSlots = [
+    { value: 'morning', label: 'Morning (9:00 - 11:00 AM)' },
+    { value: 'midday', label: 'Midday (12:00 - 2:00 PM)' },
+    { value: 'evening', label: 'Evening (6:00 - 8:00 PM)' }
+  ];
 
   // Calculate estimated price
   const calculateEstimatedPrice = () => {
@@ -123,46 +144,158 @@ const ContactAndQuoteStep: React.FC<ContactAndQuoteStepProps> = ({
             Contact Information
           </CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="space-y-6">
+          {/* Contact Method Selection */}
+          <div className="space-y-3">
+            <Label>Contact me via *</Label>
+            <RadioGroup
+              value={contactDetails.contactMethod}
+              onValueChange={(value) => handleContactChange('contactMethod', value)}
+              className="flex flex-col space-y-2"
+            >
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="email" id="email-method" />
+                <Label htmlFor="email-method" className="flex items-center gap-2 cursor-pointer">
+                  <Mail className="h-4 w-4" />
+                  Email
+                </Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="call" id="call-method" />
+                <Label htmlFor="call-method" className="flex items-center gap-2 cursor-pointer">
+                  <Phone className="h-4 w-4" />
+                  Phone Call
+                </Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="message" id="message-method" />
+                <Label htmlFor="message-method" className="flex items-center gap-2 cursor-pointer">
+                  <MessageSquare className="h-4 w-4" />
+                  Text Message
+                </Label>
+              </div>
+            </RadioGroup>
+          </div>
+
+          {/* Basic Information */}
           <div className="grid md:grid-cols-2 gap-6">
-            <div className="space-y-4">
-              <div>
-                <Label htmlFor="firstName">First Name *</Label>
-                <Input id="firstName" value={contactDetails.firstName} onChange={e => handleContactChange('firstName', e.target.value)} className="mt-1" required />
-              </div>
-              
-              <div>
-                <Label htmlFor="lastName">Last Name *</Label>
-                <Input id="lastName" value={contactDetails.lastName} onChange={e => handleContactChange('lastName', e.target.value)} className="mt-1" required />
-              </div>
-              
-              <div>
-                <Label htmlFor="email">Email Address *</Label>
-                <Input id="email" type="email" value={contactDetails.email} onChange={e => handleContactChange('email', e.target.value)} className="mt-1" required />
-              </div>
+            <div>
+              <Label htmlFor="firstName">First Name *</Label>
+              <Input 
+                id="firstName" 
+                value={contactDetails.firstName} 
+                onChange={e => handleContactChange('firstName', e.target.value)} 
+                className="mt-1" 
+                required 
+              />
             </div>
             
-            <div className="space-y-4">
-              <div>
-                <Label htmlFor="phone">Phone Number *</Label>
-                <Input id="phone" type="tel" value={contactDetails.phone} onChange={e => handleContactChange('phone', e.target.value)} className="mt-1" required />
-              </div>
-              
-              <div>
-                <Label htmlFor="preferredDate">Preferred Contact Date</Label>
-                <Input id="preferredDate" type="date" value={contactDetails.preferredDate} onChange={e => handleContactChange('preferredDate', e.target.value)} className="mt-1" />
-              </div>
-              
-              <div>
-                <Label htmlFor="preferredTime">Preferred Contact Time</Label>
-                <Input id="preferredTime" type="time" value={contactDetails.preferredTime} onChange={e => handleContactChange('preferredTime', e.target.value)} className="mt-1" />
-              </div>
+            <div>
+              <Label htmlFor="lastName">Last Name *</Label>
+              <Input 
+                id="lastName" 
+                value={contactDetails.lastName} 
+                onChange={e => handleContactChange('lastName', e.target.value)} 
+                className="mt-1" 
+                required 
+              />
             </div>
           </div>
-          
-          <div className="mt-6">
+
+          {/* Email - Always required */}
+          <div>
+            <Label htmlFor="email">Email Address *</Label>
+            <Input 
+              id="email" 
+              type="email" 
+              value={contactDetails.email} 
+              onChange={e => handleContactChange('email', e.target.value)} 
+              className="mt-1" 
+              required 
+            />
+          </div>
+
+          {/* Phone - Required for call and message */}
+          {(contactDetails.contactMethod === 'call' || contactDetails.contactMethod === 'message') && (
+            <div>
+              <Label htmlFor="phone">Phone Number *</Label>
+              <Input 
+                id="phone" 
+                type="tel" 
+                value={contactDetails.phone} 
+                onChange={e => handleContactChange('phone', e.target.value)} 
+                className="mt-1" 
+                required 
+              />
+            </div>
+          )}
+
+          {/* Call Scheduling */}
+          {contactDetails.contactMethod === 'call' && (
+            <div className="space-y-4">
+              <div>
+                <Label>Schedule Call *</Label>
+                <div className="mt-2">
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className={cn(
+                          "w-full justify-start text-left font-normal",
+                          !selectedDate && "text-muted-foreground"
+                        )}
+                      >
+                        <CalendarIcon className="mr-2 h-4 w-4" />
+                        {selectedDate ? format(selectedDate, "PPP") : "Select appointment date"}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={selectedDate}
+                        onSelect={handleDateSelect}
+                        disabled={(date) => date < new Date()}
+                        initialFocus
+                        className="p-3 pointer-events-auto"
+                      />
+                    </PopoverContent>
+                  </Popover>
+                </div>
+              </div>
+
+              {selectedDate && (
+                <div>
+                  <Label>Preferred Time *</Label>
+                  <RadioGroup
+                    value={contactDetails.appointmentTime}
+                    onValueChange={(value) => handleContactChange('appointmentTime', value)}
+                    className="mt-2"
+                  >
+                    {timeSlots.map((slot) => (
+                      <div key={slot.value} className="flex items-center space-x-2">
+                        <RadioGroupItem value={slot.value} id={slot.value} />
+                        <Label htmlFor={slot.value} className="cursor-pointer">
+                          {slot.label}
+                        </Label>
+                      </div>
+                    ))}
+                  </RadioGroup>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Special Requests */}
+          <div>
             <Label htmlFor="specialRequests">Special Requests or Questions</Label>
-            <Textarea id="specialRequests" value={contactDetails.specialRequests} onChange={e => handleContactChange('specialRequests', e.target.value)} className="mt-1" rows={4} placeholder="Any special dietary requirements, accessibility needs, celebration details, or other requests..." />
+            <Textarea 
+              id="specialRequests" 
+              value={contactDetails.specialRequests} 
+              onChange={e => handleContactChange('specialRequests', e.target.value)} 
+              className="mt-1" 
+              rows={4} 
+              placeholder="Any special dietary requirements, accessibility needs, celebration details, or other requests..." 
+            />
           </div>
         </CardContent>
       </Card>

@@ -21,6 +21,9 @@ interface ContactDetails {
   preferredDate: string;
   preferredTime: string;
   specialRequests: string;
+  contactMethod: string;
+  appointmentDate?: Date;
+  appointmentTime: string;
 }
 
 const BrokerConsultationStep: React.FC<BrokerConsultationStepProps> = ({ data, updateData }) => {
@@ -31,7 +34,10 @@ const BrokerConsultationStep: React.FC<BrokerConsultationStepProps> = ({ data, u
     email: '',
     preferredDate: '',
     preferredTime: '',
-    specialRequests: ''
+    specialRequests: '',
+    contactMethod: 'email',
+    appointmentDate: undefined,
+    appointmentTime: ''
   });
   const [isSubmitted, setIsSubmitted] = useState(false);
   const { toast } = useToast();
