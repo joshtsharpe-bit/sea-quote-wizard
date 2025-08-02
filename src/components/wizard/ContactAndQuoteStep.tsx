@@ -35,6 +35,7 @@ const ContactAndQuoteStep: React.FC<ContactAndQuoteStepProps> = ({
   });
 
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(contactDetails.appointmentDate);
+  const [datePickerOpen, setDatePickerOpen] = useState(false);
 
   const handleContactChange = (field: string, value: string | Date | undefined) => {
     const updated = {
@@ -50,6 +51,7 @@ const ContactAndQuoteStep: React.FC<ContactAndQuoteStepProps> = ({
   const handleDateSelect = (date: Date | undefined) => {
     setSelectedDate(date);
     handleContactChange('appointmentDate', date);
+    setDatePickerOpen(false); // Close popover
   };
 
   const timeSlots = [
@@ -299,7 +301,7 @@ const ContactAndQuoteStep: React.FC<ContactAndQuoteStepProps> = ({
               <div>
                 <Label className="text-sm">Preferred Date</Label>
                 <div className="mt-2">
-                  <Popover>
+                  <Popover open={datePickerOpen} onOpenChange={setDatePickerOpen}>
                     <PopoverTrigger asChild>
                       <Button
                         variant="outline"

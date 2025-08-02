@@ -21,6 +21,8 @@ const DatesAndDurationStep: React.FC<DatesAndDurationStepProps> = ({ data, updat
     data.endDate ? new Date(data.endDate) : undefined
   );
   const [selectedDuration, setSelectedDuration] = useState<number>(data.duration || 5);
+  const [startDateOpen, setStartDateOpen] = useState(false);
+  const [endDateOpen, setEndDateOpen] = useState(false);
 
   const durationOptions = [5, 7, 10, 14, 21];
 
@@ -37,6 +39,7 @@ const DatesAndDurationStep: React.FC<DatesAndDurationStepProps> = ({ data, updat
         endDate: endDateStr,
         duration: selectedDuration 
       });
+      setStartDateOpen(false); // Close popover
     }
   };
 
@@ -50,6 +53,7 @@ const DatesAndDurationStep: React.FC<DatesAndDurationStepProps> = ({ data, updat
         endDate: endDateStr,
         duration 
       });
+      setEndDateOpen(false); // Close popover
     }
   };
 
@@ -95,7 +99,7 @@ const DatesAndDurationStep: React.FC<DatesAndDurationStepProps> = ({ data, updat
             {/* Departure Date */}
             <div className="text-center">
               <p className="text-xs md:text-sm text-muted-foreground mb-2">Departure Date</p>
-              <Popover>
+              <Popover open={startDateOpen} onOpenChange={setStartDateOpen}>
                 <PopoverTrigger asChild>
                   <Button
                     variant="outline"
@@ -169,7 +173,7 @@ const DatesAndDurationStep: React.FC<DatesAndDurationStepProps> = ({ data, updat
             {/* Return Date */}
             <div className="text-center">
               <p className="text-xs md:text-sm text-muted-foreground mb-2">Return Date</p>
-              <Popover>
+              <Popover open={endDateOpen} onOpenChange={setEndDateOpen}>
                 <PopoverTrigger asChild>
                   <Button
                     variant="outline"
