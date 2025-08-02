@@ -92,8 +92,8 @@ const IncludedAmenitiesStep: React.FC<IncludedAmenitiesStepProps> = ({ data, upd
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex justify-between items-start">
-            <div>
+          <div className="flex justify-between items-start gap-6">
+            <div className="flex-1">
               <p className="text-muted-foreground text-lg mb-4">
                 Everything you need for the perfect charter experience is included
               </p>
@@ -119,27 +119,27 @@ const IncludedAmenitiesStep: React.FC<IncludedAmenitiesStepProps> = ({ data, upd
                 />
                 <span className="text-sm text-muted-foreground">Bareboat</span>
               </div>
+            </div>
 
-              {isBareboatCharter && (
-                <div className="mt-4 p-4 rounded-lg bg-amber-50 border border-amber-200 dark:bg-amber-900/20 dark:border-amber-800">
-                  <div className="flex items-start gap-3">
-                    <AlertTriangle className="h-5 w-5 text-amber-600 mt-0.5 flex-shrink-0" />
-                    <div>
-                      <h5 className="font-semibold text-amber-800 dark:text-amber-200 mb-2">
-                        Bareboat Charter Requirements
-                      </h5>
-                      <ul className="text-sm text-amber-700 dark:text-amber-300 space-y-1">
-                        <li>• Valid sailing license or certification</li>
-                        <li>• Demonstrated sailing experience (log book)</li>
-                        <li>• Security deposit required</li>
-                        <li>• Responsibility for navigation and boat operation</li>
-                        <li>• Must provision own food and beverages</li>
-                      </ul>
-                    </div>
+            {isBareboatCharter && (
+              <div className="w-80 p-4 rounded-lg bg-amber-50 border border-amber-200 dark:bg-amber-900/20 dark:border-amber-800">
+                <div className="flex items-start gap-3">
+                  <AlertTriangle className="h-5 w-5 text-amber-600 mt-0.5 flex-shrink-0" />
+                  <div>
+                    <h5 className="font-semibold text-amber-800 dark:text-amber-200 mb-2">
+                      Bareboat Charter Requirements
+                    </h5>
+                    <ul className="text-sm text-amber-700 dark:text-amber-300 space-y-1">
+                      <li>• Valid sailing license or certification</li>
+                      <li>• Demonstrated sailing experience (log book)</li>
+                      <li>• Security deposit required</li>
+                      <li>• Responsibility for navigation and boat operation</li>
+                      <li>• Must provision own food and beverages</li>
+                    </ul>
                   </div>
                 </div>
-              )}
-            </div>
+              </div>
+            )}
           </div>
         </CardContent>
       </Card>
