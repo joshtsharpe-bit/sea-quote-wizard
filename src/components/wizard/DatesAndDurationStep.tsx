@@ -3,8 +3,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { CalendarIcon, Minus } from 'lucide-react';
-import { format } from 'date-fns';
+import { CalendarIcon, Minus, ChevronDown } from 'lucide-react';
+import { format, addDays } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { WizardData } from '../YachtCharterWizard';
 
@@ -20,17 +20,23 @@ const DatesAndDurationStep: React.FC<DatesAndDurationStepProps> = ({ data, updat
   const [endDate, setEndDate] = useState<Date | undefined>(
     data.endDate ? new Date(data.endDate) : undefined
   );
+  const [selectedDuration, setSelectedDuration] = useState<number>(data.duration || 5);
+
+  const durationOptions = [5, 7, 10, 14, 21];
 
   const handleStartDateChange = (date: Date | undefined) => {
     setStartDate(date);
     if (date) {
       const startDateStr = date.toISOString().split('T')[0];
-      updateData({ startDate: startDateStr });
+      const newEndDate = addDays(date, selectedDuration);
+      const endDateStr = newEndDate.toISOString().split('T')[0];
       
-      if (endDate) {
-        const duration = Math.ceil((endDate.getTime() - date.getTime()) / (1000 * 60 * 60 * 24));
-        updateData({ duration });
-      }
+      setEndDate(newEndDate);
+      updateData({ 
+        startDate: startDateStr,
+        endDate: endDateStr,
+        duration: selectedDuration 
+      });
     }
   };
 
@@ -39,10 +45,27 @@ const DatesAndDurationStep: React.FC<DatesAndDurationStepProps> = ({ data, updat
     if (date && startDate) {
       const endDateStr = date.toISOString().split('T')[0];
       const duration = Math.ceil((date.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
+      setSelectedDuration(duration);
       updateData({ 
         endDate: endDateStr,
         duration 
       });
+    }
+  };
+
+  const handleDurationChange = (duration: number) => {
+    setSelectedDuration(duration);
+    if (startDate) {
+      const newEndDate = addDays(startDate, duration);
+      const endDateStr = newEndDate.toISOString().split('T')[0];
+      
+      setEndDate(newEndDate);
+      updateData({ 
+        endDate: endDateStr,
+        duration 
+      });
+    } else {
+      updateData({ duration });
     }
   };
 
@@ -113,11 +136,33 @@ const DatesAndDurationStep: React.FC<DatesAndDurationStepProps> = ({ data, updat
               <div className="h-px bg-border relative">
                 <Minus className="absolute left-0 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Minus className="absolute right-0 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                {data.duration && data.duration >= 5 && (
-                  <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-background px-3 py-1 rounded-full border text-sm font-medium">
-                    {data.duration} days
-                  </div>
-                )}
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-background px-3 py-1 rounded-full border text-sm font-medium hover:bg-muted"
+                    >
+                      {selectedDuration} nights
+                      <ChevronDown className="h-3 w-3 ml-1" />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-2" align="center">
+                    <div className="flex flex-col gap-1">
+                      {durationOptions.map((duration) => (
+                        <Button
+                          key={duration}
+                          variant={selectedDuration === duration ? "default" : "ghost"}
+                          size="sm"
+                          className="justify-start"
+                          onClick={() => handleDurationChange(duration)}
+                        >
+                          {duration} nights
+                        </Button>
+                      ))}
+                    </div>
+                  </PopoverContent>
+                </Popover>
               </div>
             </div>
 
