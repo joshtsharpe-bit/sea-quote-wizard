@@ -254,12 +254,10 @@ const ContactAndQuoteStep: React.FC<ContactAndQuoteStepProps> = ({
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent 
-                    className="w-auto p-0 z-[100] bg-background border shadow-lg" 
+                    className="w-auto p-0 bg-background border shadow-lg" 
                     align="start"
                     side="bottom"
                     sideOffset={4}
-                    avoidCollisions={true}
-                    collisionPadding={20}
                   >
                     <div className="p-3 bg-background">
                       <Calendar
@@ -267,7 +265,6 @@ const ContactAndQuoteStep: React.FC<ContactAndQuoteStepProps> = ({
                         selected={selectedDate}
                         onSelect={handleDateSelect}
                         disabled={(date) => date < new Date()}
-                        initialFocus
                         className="pointer-events-auto border-0"
                       />
                       
