@@ -6,13 +6,14 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { User, Mail, Phone, Calendar, MessageSquare, DollarSign, Ship, MapPin, Users } from 'lucide-react';
 import { WizardData } from '../YachtCharterWizard';
-
 interface ContactAndQuoteStepProps {
   data: WizardData;
   updateData: (updates: Partial<WizardData>) => void;
 }
-
-const ContactAndQuoteStep: React.FC<ContactAndQuoteStepProps> = ({ data, updateData }) => {
+const ContactAndQuoteStep: React.FC<ContactAndQuoteStepProps> = ({
+  data,
+  updateData
+}) => {
   const [contactDetails, setContactDetails] = useState(data.contactDetails || {
     firstName: '',
     lastName: '',
@@ -22,40 +23,38 @@ const ContactAndQuoteStep: React.FC<ContactAndQuoteStepProps> = ({ data, updateD
     preferredTime: '',
     specialRequests: ''
   });
-
   const handleContactChange = (field: string, value: string) => {
-    const updated = { ...contactDetails, [field]: value };
+    const updated = {
+      ...contactDetails,
+      [field]: value
+    };
     setContactDetails(updated);
-    updateData({ contactDetails: updated });
+    updateData({
+      contactDetails: updated
+    });
   };
 
   // Calculate estimated price
   const calculateEstimatedPrice = () => {
     if (!data.destination || !data.yachtType || !data.budgetRange) return 0;
-    
     const basePrice = data.destination.basePrice;
     const durationMultiplier = data.duration / 7;
     const yachtMultiplier = data.yachtType.priceMultiplier;
     const guestFactor = Math.max(1, data.guests / 8);
-    
     let estimatedPrice = basePrice * durationMultiplier * yachtMultiplier * guestFactor;
-    
+
     // Apply bareboat discount
     if (data.isBareboatCharter) {
       estimatedPrice *= 0.7; // 30% discount for bareboat
     }
-    
+
     // Keep within budget range
     const [minBudget, maxBudget] = data.budgetRange;
     estimatedPrice = Math.min(Math.max(estimatedPrice, minBudget), maxBudget);
-    
     return Math.round(estimatedPrice);
   };
-
   const estimatedPrice = calculateEstimatedPrice();
-
-  return (
-    <div className="max-w-4xl mx-auto space-y-8">
+  return <div className="max-w-4xl mx-auto space-y-8">
       {/* Quote Summary */}
       <Card className="glass border-primary/20 bg-gradient-card">
         <CardHeader>
@@ -129,86 +128,41 @@ const ContactAndQuoteStep: React.FC<ContactAndQuoteStepProps> = ({ data, updateD
             <div className="space-y-4">
               <div>
                 <Label htmlFor="firstName">First Name *</Label>
-                <Input
-                  id="firstName"
-                  value={contactDetails.firstName}
-                  onChange={(e) => handleContactChange('firstName', e.target.value)}
-                  className="mt-1"
-                  required
-                />
+                <Input id="firstName" value={contactDetails.firstName} onChange={e => handleContactChange('firstName', e.target.value)} className="mt-1" required />
               </div>
               
               <div>
                 <Label htmlFor="lastName">Last Name *</Label>
-                <Input
-                  id="lastName"
-                  value={contactDetails.lastName}
-                  onChange={(e) => handleContactChange('lastName', e.target.value)}
-                  className="mt-1"
-                  required
-                />
+                <Input id="lastName" value={contactDetails.lastName} onChange={e => handleContactChange('lastName', e.target.value)} className="mt-1" required />
               </div>
               
               <div>
                 <Label htmlFor="email">Email Address *</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  value={contactDetails.email}
-                  onChange={(e) => handleContactChange('email', e.target.value)}
-                  className="mt-1"
-                  required
-                />
+                <Input id="email" type="email" value={contactDetails.email} onChange={e => handleContactChange('email', e.target.value)} className="mt-1" required />
               </div>
             </div>
             
             <div className="space-y-4">
               <div>
                 <Label htmlFor="phone">Phone Number *</Label>
-                <Input
-                  id="phone"
-                  type="tel"
-                  value={contactDetails.phone}
-                  onChange={(e) => handleContactChange('phone', e.target.value)}
-                  className="mt-1"
-                  required
-                />
+                <Input id="phone" type="tel" value={contactDetails.phone} onChange={e => handleContactChange('phone', e.target.value)} className="mt-1" required />
               </div>
               
               <div>
                 <Label htmlFor="preferredDate">Preferred Contact Date</Label>
-                <Input
-                  id="preferredDate"
-                  type="date"
-                  value={contactDetails.preferredDate}
-                  onChange={(e) => handleContactChange('preferredDate', e.target.value)}
-                  className="mt-1"
-                />
+                <Input id="preferredDate" type="date" value={contactDetails.preferredDate} onChange={e => handleContactChange('preferredDate', e.target.value)} className="mt-1" />
               </div>
               
               <div>
                 <Label htmlFor="preferredTime">Preferred Contact Time</Label>
-                <Input
-                  id="preferredTime"
-                  type="time"
-                  value={contactDetails.preferredTime}
-                  onChange={(e) => handleContactChange('preferredTime', e.target.value)}
-                  className="mt-1"
-                />
+                <Input id="preferredTime" type="time" value={contactDetails.preferredTime} onChange={e => handleContactChange('preferredTime', e.target.value)} className="mt-1" />
               </div>
             </div>
           </div>
           
           <div className="mt-6">
             <Label htmlFor="specialRequests">Special Requests or Questions</Label>
-            <Textarea
-              id="specialRequests"
-              value={contactDetails.specialRequests}
-              onChange={(e) => handleContactChange('specialRequests', e.target.value)}
-              className="mt-1"
-              rows={4}
-              placeholder="Any special dietary requirements, accessibility needs, celebration details, or other requests..."
-            />
+            <Textarea id="specialRequests" value={contactDetails.specialRequests} onChange={e => handleContactChange('specialRequests', e.target.value)} className="mt-1" rows={4} placeholder="Any special dietary requirements, accessibility needs, celebration details, or other requests..." />
           </div>
         </CardContent>
       </Card>
@@ -228,9 +182,7 @@ const ContactAndQuoteStep: React.FC<ContactAndQuoteStepProps> = ({ data, updateD
                 <span className="text-accent font-bold">1</span>
               </div>
               <h4 className="font-medium mb-2">Broker Contact</h4>
-              <p className="text-sm text-muted-foreground">
-                A yacht charter specialist will contact you within 24 hours to discuss your requirements.
-              </p>
+              <p className="text-sm text-muted-foreground">A yacht charter specialist will contact you as per your chosen contact method.</p>
             </div>
             
             <div className="text-center">
@@ -255,8 +207,6 @@ const ContactAndQuoteStep: React.FC<ContactAndQuoteStepProps> = ({ data, updateD
           </div>
         </CardContent>
       </Card>
-    </div>
-  );
+    </div>;
 };
-
 export default ContactAndQuoteStep;
