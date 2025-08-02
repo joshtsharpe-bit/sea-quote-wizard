@@ -204,8 +204,8 @@ const WhereAndWhyStep: React.FC<WhereAndWhyStepProps> = ({ data, updateData }) =
                     >
                       <reason.icon className="h-5 w-5" />
                       <div className="text-center">
-                        <div className="font-medium text-xs">{reason.label}</div>
-                        <div className="text-xs opacity-80 mt-1 leading-tight">{reason.description}</div>
+                        <div className="font-medium text-sm">{reason.label}</div>
+                        <div className="text-xs text-muted-foreground mt-1 leading-relaxed">{reason.description}</div>
                       </div>
                     </Button>
                   </CarouselItem>
@@ -230,7 +230,7 @@ const WhereAndWhyStep: React.FC<WhereAndWhyStepProps> = ({ data, updateData }) =
                 <reason.icon className="h-6 w-6" />
                 <div className="text-center">
                   <div className="font-medium text-sm">{reason.label}</div>
-                  <div className="text-xs opacity-80 mt-1">{reason.description}</div>
+                  <div className="text-xs text-muted-foreground mt-1 leading-relaxed">{reason.description}</div>
                 </div>
               </Button>
             ))}
