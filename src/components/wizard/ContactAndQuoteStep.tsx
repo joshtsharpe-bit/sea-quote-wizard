@@ -11,10 +11,12 @@ import { User, Mail, Phone, Calendar as CalendarIcon, MessageSquare, DollarSign,
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { WizardData } from '../YachtCharterWizard';
+
 interface ContactAndQuoteStepProps {
   data: WizardData;
   updateData: (updates: Partial<WizardData>) => void;
 }
+
 const ContactAndQuoteStep: React.FC<ContactAndQuoteStepProps> = ({
   data,
   updateData
@@ -33,6 +35,7 @@ const ContactAndQuoteStep: React.FC<ContactAndQuoteStepProps> = ({
   });
 
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(contactDetails.appointmentDate);
+
   const handleContactChange = (field: string, value: string | Date | undefined) => {
     const updated = {
       ...contactDetails,
@@ -74,8 +77,21 @@ const ContactAndQuoteStep: React.FC<ContactAndQuoteStepProps> = ({
     estimatedPrice = Math.min(Math.max(estimatedPrice, minBudget), maxBudget);
     return Math.round(estimatedPrice);
   };
+
   const estimatedPrice = calculateEstimatedPrice();
-  return <div className="max-w-4xl mx-auto space-y-8">
+
+  const getContactMethodDisplay = () => {
+    if (contactDetails.contactMethod === 'email') {
+      return { icon: Mail, label: 'Email', color: 'text-blue-600' };
+    } else if (contactDetails.contactMethod === 'call') {
+      return { icon: Phone, label: 'Phone Call', color: 'text-green-600' };
+    } else {
+      return { icon: MessageSquare, label: 'Text Message', color: 'text-purple-600' };
+    }
+  };
+
+  return (
+    <div className="max-w-4xl mx-auto space-y-8">
       {/* Quote Summary */}
       <Card className="glass border-primary/20 bg-gradient-card">
         <CardHeader>
@@ -146,35 +162,43 @@ const ContactAndQuoteStep: React.FC<ContactAndQuoteStepProps> = ({
         </CardHeader>
         <CardContent className="space-y-6">
           {/* Contact Method Selection */}
-          <div className="space-y-3">
-            <Label>Contact me via *</Label>
-            <RadioGroup
-              value={contactDetails.contactMethod}
-              onValueChange={(value) => handleContactChange('contactMethod', value)}
-              className="flex flex-col space-y-2"
-            >
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="email" id="email-method" />
-                <Label htmlFor="email-method" className="flex items-center gap-2 cursor-pointer">
-                  <Mail className="h-4 w-4" />
-                  Email
-                </Label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="call" id="call-method" />
-                <Label htmlFor="call-method" className="flex items-center gap-2 cursor-pointer">
-                  <Phone className="h-4 w-4" />
-                  Phone Call
-                </Label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="message" id="message-method" />
-                <Label htmlFor="message-method" className="flex items-center gap-2 cursor-pointer">
-                  <MessageSquare className="h-4 w-4" />
-                  Text Message
-                </Label>
-              </div>
-            </RadioGroup>
+          <div className="space-y-4">
+            <Label className="text-base font-medium">How would you like us to contact you? *</Label>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {[
+                { value: 'email', icon: Mail, label: 'Email', desc: 'We\'ll send you yacht options via email' },
+                { value: 'call', icon: Phone, label: 'Phone Call', desc: 'Schedule a call with our broker' },
+                { value: 'message', icon: MessageSquare, label: 'Text Message', desc: 'Get updates via SMS' }
+              ].map((method) => {
+                const IconComponent = method.icon;
+                return (
+                  <div 
+                    key={method.value}
+                    className={cn(
+                      "relative p-4 rounded-lg border-2 cursor-pointer transition-all hover:shadow-md",
+                      contactDetails.contactMethod === method.value 
+                        ? "border-primary bg-primary/5" 
+                        : "border-border hover:border-primary/50"
+                    )}
+                    onClick={() => handleContactChange('contactMethod', method.value)}
+                  >
+                    <div className="flex items-center gap-3 mb-2">
+                      <IconComponent className="h-5 w-5 text-primary" />
+                      <span className="font-medium">{method.label}</span>
+                    </div>
+                    <p className="text-sm text-muted-foreground">{method.desc}</p>
+                    <input
+                      type="radio"
+                      name="contactMethod"
+                      value={method.value}
+                      checked={contactDetails.contactMethod === method.value}
+                      onChange={() => handleContactChange('contactMethod', method.value)}
+                      className="absolute top-4 right-4"
+                    />
+                  </div>
+                );
+              })}
+            </div>
           </div>
 
           {/* Basic Information */}
@@ -226,71 +250,77 @@ const ContactAndQuoteStep: React.FC<ContactAndQuoteStepProps> = ({
                 onChange={e => handleContactChange('phone', e.target.value)} 
                 className="mt-1" 
                 required 
+                placeholder="+1 (555) 123-4567"
               />
             </div>
           )}
 
           {/* Call Scheduling */}
           {contactDetails.contactMethod === 'call' && (
-            <div>
-              <Label>Schedule Call *</Label>
-              <div className="mt-2">
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant="outline"
-                      className={cn(
-                        "w-full justify-start text-left font-normal",
-                        !selectedDate && "text-muted-foreground"
-                      )}
-                    >
-                      <CalendarIcon className="mr-2 h-4 w-4" />
-                      {selectedDate && contactDetails.appointmentTime 
-                        ? `${format(selectedDate, "PPP")} - ${timeSlots.find(t => t.value === contactDetails.appointmentTime)?.label}`
-                        : selectedDate 
-                        ? `${format(selectedDate, "PPP")} - Select time`
-                        : "Select appointment date and time"
-                      }
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent 
-                    className="w-auto p-0 bg-background border shadow-lg" 
-                    align="start"
-                    side="bottom"
-                    sideOffset={4}
-                  >
-                    <div className="p-3 bg-background">
+            <div className="space-y-4">
+              <Label className="text-base font-medium">Schedule Your Call *</Label>
+              
+              {/* Date Selection */}
+              <div>
+                <Label className="text-sm">Preferred Date</Label>
+                <div className="mt-2">
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className={cn(
+                          "w-full justify-start text-left font-normal",
+                          !selectedDate && "text-muted-foreground"
+                        )}
+                      >
+                        <CalendarIcon className="mr-2 h-4 w-4" />
+                        {selectedDate ? format(selectedDate, "EEEE, MMMM d, yyyy") : "Choose a date"}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-3" align="start">
                       <Calendar
                         mode="single"
                         selected={selectedDate}
                         onSelect={handleDateSelect}
                         disabled={(date) => date < new Date()}
-                        className="pointer-events-auto border-0"
+                        className="border-0"
                       />
-                      
-                      {selectedDate && (
-                        <div className="mt-4 pt-4 border-t border-border">
-                          <Label className="text-sm font-medium mb-3 block">Preferred Time *</Label>
-                          <RadioGroup
-                            value={contactDetails.appointmentTime}
-                            onValueChange={(value) => handleContactChange('appointmentTime', value)}
-                            className="space-y-2"
-                          >
-                            {timeSlots.map((slot) => (
-                              <div key={slot.value} className="flex items-center space-x-2">
-                                <RadioGroupItem value={slot.value} id={`time-${slot.value}`} />
-                                <Label htmlFor={`time-${slot.value}`} className="cursor-pointer text-sm">
-                                  {slot.label}
-                                </Label>
-                              </div>
-                            ))}
-                          </RadioGroup>
-                        </div>
-                      )}
-                    </div>
-                  </PopoverContent>
-                </Popover>
+                    </PopoverContent>
+                  </Popover>
+                </div>
               </div>
+
+              {/* Time Selection - Only show after date is selected */}
+              {selectedDate && (
+                <div>
+                  <Label className="text-sm">Preferred Time</Label>
+                  <div className="mt-2 grid grid-cols-1 gap-2">
+                    {timeSlots.map((slot) => (
+                      <div 
+                        key={slot.value}
+                        className={cn(
+                          "p-3 rounded-lg border cursor-pointer transition-all",
+                          contactDetails.appointmentTime === slot.value 
+                            ? "border-primary bg-primary/5" 
+                            : "border-border hover:border-primary/50"
+                        )}
+                        onClick={() => handleContactChange('appointmentTime', slot.value)}
+                      >
+                        <div className="flex items-center justify-between">
+                          <span className="font-medium">{slot.label}</span>
+                          <input
+                            type="radio"
+                            name="appointmentTime"
+                            value={slot.value}
+                            checked={contactDetails.appointmentTime === slot.value}
+                            onChange={() => handleContactChange('appointmentTime', slot.value)}
+                          />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           )}
 
@@ -313,7 +343,7 @@ const ContactAndQuoteStep: React.FC<ContactAndQuoteStepProps> = ({
       <Card className="glass border-accent/20 bg-gradient-warm">
         <CardHeader>
           <CardTitle className="flex items-center gap-3 text-xl">
-            <Calendar className="h-5 w-5 text-accent" />
+            <CalendarIcon className="h-5 w-5 text-accent" />
             What Happens Next
           </CardTitle>
         </CardHeader>
@@ -324,7 +354,9 @@ const ContactAndQuoteStep: React.FC<ContactAndQuoteStepProps> = ({
                 <span className="text-accent font-bold">1</span>
               </div>
               <h4 className="font-medium mb-2">Broker Contact</h4>
-              <p className="text-sm text-muted-foreground">A yacht charter specialist will contact you as per your chosen contact method.</p>
+              <p className="text-sm text-muted-foreground">
+                A yacht charter specialist will contact you via {getContactMethodDisplay().label.toLowerCase()}.
+              </p>
             </div>
             
             <div className="text-center">
@@ -349,6 +381,8 @@ const ContactAndQuoteStep: React.FC<ContactAndQuoteStepProps> = ({
           </div>
         </CardContent>
       </Card>
-    </div>;
+    </div>
+  );
 };
+
 export default ContactAndQuoteStep;
