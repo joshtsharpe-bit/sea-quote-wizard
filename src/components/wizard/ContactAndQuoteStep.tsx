@@ -232,56 +232,61 @@ const ContactAndQuoteStep: React.FC<ContactAndQuoteStepProps> = ({
 
           {/* Call Scheduling */}
           {contactDetails.contactMethod === 'call' && (
-            <div className="space-y-4">
-              <div>
-                <Label>Schedule Call *</Label>
-                <div className="mt-2">
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <Button
-                        variant="outline"
-                        className={cn(
-                          "w-full justify-start text-left font-normal",
-                          !selectedDate && "text-muted-foreground"
-                        )}
-                      >
-                        <CalendarIcon className="mr-2 h-4 w-4" />
-                        {selectedDate ? format(selectedDate, "PPP") : "Select appointment date"}
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
+            <div>
+              <Label>Schedule Call *</Label>
+              <div className="mt-2">
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      className={cn(
+                        "w-full justify-start text-left font-normal",
+                        !selectedDate && "text-muted-foreground"
+                      )}
+                    >
+                      <CalendarIcon className="mr-2 h-4 w-4" />
+                      {selectedDate && contactDetails.appointmentTime 
+                        ? `${format(selectedDate, "PPP")} - ${timeSlots.find(t => t.value === contactDetails.appointmentTime)?.label}`
+                        : selectedDate 
+                        ? `${format(selectedDate, "PPP")} - Select time`
+                        : "Select appointment date and time"
+                      }
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0 z-50" align="start">
+                    <div className="p-3">
                       <Calendar
                         mode="single"
                         selected={selectedDate}
                         onSelect={handleDateSelect}
                         disabled={(date) => date < new Date()}
                         initialFocus
-                        className="p-3 pointer-events-auto"
+                        className="pointer-events-auto"
                       />
-                    </PopoverContent>
-                  </Popover>
-                </div>
+                      
+                      {selectedDate && (
+                        <div className="mt-4 pt-4 border-t">
+                          <Label className="text-sm font-medium mb-3 block">Preferred Time *</Label>
+                          <RadioGroup
+                            value={contactDetails.appointmentTime}
+                            onValueChange={(value) => handleContactChange('appointmentTime', value)}
+                            className="space-y-2"
+                          >
+                            {timeSlots.map((slot) => (
+                              <div key={slot.value} className="flex items-center space-x-2">
+                                <RadioGroupItem value={slot.value} id={`time-${slot.value}`} />
+                                <Label htmlFor={`time-${slot.value}`} className="cursor-pointer text-sm">
+                                  {slot.label}
+                                </Label>
+                              </div>
+                            ))}
+                          </RadioGroup>
+                        </div>
+                      )}
+                    </div>
+                  </PopoverContent>
+                </Popover>
               </div>
-
-              {selectedDate && (
-                <div>
-                  <Label>Preferred Time *</Label>
-                  <RadioGroup
-                    value={contactDetails.appointmentTime}
-                    onValueChange={(value) => handleContactChange('appointmentTime', value)}
-                    className="mt-2"
-                  >
-                    {timeSlots.map((slot) => (
-                      <div key={slot.value} className="flex items-center space-x-2">
-                        <RadioGroupItem value={slot.value} id={slot.value} />
-                        <Label htmlFor={slot.value} className="cursor-pointer">
-                          {slot.label}
-                        </Label>
-                      </div>
-                    ))}
-                  </RadioGroup>
-                </div>
-              )}
             </div>
           )}
 
