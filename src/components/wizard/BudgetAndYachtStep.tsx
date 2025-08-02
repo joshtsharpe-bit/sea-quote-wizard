@@ -139,7 +139,7 @@ const BudgetAndYachtStep: React.FC<BudgetAndYachtStepProps> = ({ data, updateDat
                 <div className="text-lg md:text-2xl font-bold text-primary">
                   ${budgetRange[0].toLocaleString()} - ${budgetRange[1].toLocaleString()}
                 </div>
-                <div className="text-xs md:text-sm text-muted-foreground">Per week</div>
+                <div className="text-xs md:text-sm text-muted-foreground">Total</div>
               </div>
             </div>
             
