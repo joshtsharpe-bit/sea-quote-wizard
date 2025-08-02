@@ -253,19 +253,26 @@ const ContactAndQuoteStep: React.FC<ContactAndQuoteStepProps> = ({
                       }
                     </Button>
                   </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0 z-50" align="start">
-                    <div className="p-3">
+                  <PopoverContent 
+                    className="w-auto p-0 z-[100] bg-background border shadow-lg" 
+                    align="start"
+                    side="bottom"
+                    sideOffset={4}
+                    avoidCollisions={true}
+                    collisionPadding={20}
+                  >
+                    <div className="p-3 bg-background">
                       <Calendar
                         mode="single"
                         selected={selectedDate}
                         onSelect={handleDateSelect}
                         disabled={(date) => date < new Date()}
                         initialFocus
-                        className="pointer-events-auto"
+                        className="pointer-events-auto border-0"
                       />
                       
                       {selectedDate && (
-                        <div className="mt-4 pt-4 border-t">
+                        <div className="mt-4 pt-4 border-t border-border">
                           <Label className="text-sm font-medium mb-3 block">Preferred Time *</Label>
                           <RadioGroup
                             value={contactDetails.appointmentTime}
