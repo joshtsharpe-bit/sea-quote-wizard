@@ -39,14 +39,14 @@ const destinations = {
 };
 
 const reasons = [
-  { id: 'adventure', label: 'Adventure', icon: Trophy, description: 'Explore new waters and destinations' },
+  { id: 'adventure', label: 'Adventure', icon: Trophy, description: 'Explore & discover' },
   { id: 'romance', label: 'Romance', icon: Heart, description: 'Intimate moments on the water' },
-  { id: 'celebration', label: 'Celebration', icon: PartyPopper, description: 'Special occasions and milestones' },
+  { id: 'celebration', label: 'Celebration', icon: PartyPopper, description: 'Special occasions' },
   { id: 'rest', label: 'Rest & Relaxation', icon: Coffee, description: 'Unwind and recharge' },
-  { id: 'water-sports', label: 'Water Sports', icon: Waves, description: 'Diving, snorkeling, and aquatic fun' },
+  { id: 'water-sports', label: 'Water Sports', icon: Waves, description: 'Diving & aquatic fun' },
   { id: 'family', label: 'Family Time', icon: Users, description: 'Quality time with loved ones' },
   { id: 'luxury', label: 'Luxury Experience', icon: Sparkles, description: 'Indulge in premium comfort' },
-  { id: 'business', label: 'Business Retreat', icon: Trophy, description: 'Corporate events and networking' }
+  { id: 'business', label: 'Business Retreat', icon: Trophy, description: 'Corporate events' }
 ];
 
 const WhereAndWhyStep: React.FC<WhereAndWhyStepProps> = ({ data, updateData }) => {
