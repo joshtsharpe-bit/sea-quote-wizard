@@ -82,25 +82,25 @@ const DatesAndDurationStep: React.FC<DatesAndDurationStepProps> = ({ data, updat
   }, [startDate, endDate, data.duration]);
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8">
+    <div className="max-w-4xl mx-auto space-y-6 md:space-y-8 px-4 md:px-0">
       <Card className="glass">
-        <CardHeader>
-          <CardTitle className="text-2xl font-bold text-center">
+        <CardHeader className="pb-4 md:pb-6">
+          <CardTitle className="text-xl md:text-2xl font-bold text-center">
             When would you like to charter?
           </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-8">
+        <CardContent className="space-y-6 md:space-y-8">
           {/* Date Selection with Visual Connection */}
-          <div className="flex items-center justify-center gap-8">
+          <div className="flex items-center justify-center gap-4 md:gap-8">
             {/* Departure Date */}
             <div className="text-center">
-              <p className="text-sm text-muted-foreground mb-2">Departure Date</p>
+              <p className="text-xs md:text-sm text-muted-foreground mb-2">Departure Date</p>
               <Popover>
                 <PopoverTrigger asChild>
                   <Button
                     variant="outline"
                     className={cn(
-                      "h-20 w-20 rounded-xl flex flex-col items-center justify-center gap-1",
+                      "h-16 w-16 md:h-20 md:w-20 rounded-xl flex flex-col items-center justify-center gap-1",
                       !startDate && "text-muted-foreground"
                     )}
                   >
@@ -109,12 +109,12 @@ const DatesAndDurationStep: React.FC<DatesAndDurationStepProps> = ({ data, updat
                         <span className="text-xs font-medium text-primary">
                           {format(startDate, "MMM")}
                         </span>
-                        <span className="text-lg font-bold">
+                        <span className="text-base md:text-lg font-bold">
                           {format(startDate, "dd")}
                         </span>
                       </>
                     ) : (
-                      <CalendarIcon className="h-6 w-6" />
+                      <CalendarIcon className="h-5 w-5 md:h-6 md:w-6" />
                     )}
                   </Button>
                 </PopoverTrigger>
@@ -132,19 +132,19 @@ const DatesAndDurationStep: React.FC<DatesAndDurationStepProps> = ({ data, updat
             </div>
 
             {/* Connection Line with Duration */}
-            <div className="flex-1 max-w-xs relative">
+            <div className="flex-1 max-w-[120px] md:max-w-xs relative">
               <div className="h-px bg-border relative">
-                <Minus className="absolute left-0 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Minus className="absolute right-0 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Minus className="absolute left-0 top-1/2 -translate-y-1/2 h-3 w-3 md:h-4 md:w-4 text-muted-foreground" />
+                <Minus className="absolute right-0 top-1/2 -translate-y-1/2 h-3 w-3 md:h-4 md:w-4 text-muted-foreground" />
                 <Popover>
                   <PopoverTrigger asChild>
                     <Button
                       variant="outline"
                       size="sm"
-                      className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-background px-3 py-1 rounded-full border text-sm font-medium hover:bg-muted"
+                      className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-background px-2 md:px-3 py-1 rounded-full border text-xs md:text-sm font-medium hover:bg-muted"
                     >
                       {selectedDuration} nights
-                      <ChevronDown className="h-3 w-3 ml-1" />
+                      <ChevronDown className="h-2 w-2 md:h-3 md:w-3 ml-1" />
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-auto p-2" align="center">
@@ -168,13 +168,13 @@ const DatesAndDurationStep: React.FC<DatesAndDurationStepProps> = ({ data, updat
 
             {/* Return Date */}
             <div className="text-center">
-              <p className="text-sm text-muted-foreground mb-2">Return Date</p>
+              <p className="text-xs md:text-sm text-muted-foreground mb-2">Return Date</p>
               <Popover>
                 <PopoverTrigger asChild>
                   <Button
                     variant="outline"
                     className={cn(
-                      "h-20 w-20 rounded-xl flex flex-col items-center justify-center gap-1",
+                      "h-16 w-16 md:h-20 md:w-20 rounded-xl flex flex-col items-center justify-center gap-1",
                       !endDate && "text-muted-foreground"
                     )}
                   >
@@ -183,12 +183,12 @@ const DatesAndDurationStep: React.FC<DatesAndDurationStepProps> = ({ data, updat
                         <span className="text-xs font-medium text-primary">
                           {format(endDate, "MMM")}
                         </span>
-                        <span className="text-lg font-bold">
+                        <span className="text-base md:text-lg font-bold">
                           {format(endDate, "dd")}
                         </span>
                       </>
                     ) : (
-                      <CalendarIcon className="h-6 w-6" />
+                      <CalendarIcon className="h-5 w-5 md:h-6 md:w-6" />
                     )}
                   </Button>
                 </PopoverTrigger>
@@ -207,8 +207,8 @@ const DatesAndDurationStep: React.FC<DatesAndDurationStepProps> = ({ data, updat
           </div>
 
           {data.duration && data.duration < 5 && (
-            <div className="text-center p-4 bg-destructive/10 border border-destructive/20 rounded-lg">
-              <p className="text-destructive">Minimum charter duration is 5 nights</p>
+            <div className="text-center p-3 md:p-4 bg-destructive/10 border border-destructive/20 rounded-lg">
+              <p className="text-destructive text-sm">Minimum charter duration is 5 nights</p>
             </div>
           )}
         </CardContent>
@@ -217,8 +217,8 @@ const DatesAndDurationStep: React.FC<DatesAndDurationStepProps> = ({ data, updat
       {/* Weather Heat Map */}
       {data.destination && (
         <Card className="glass">
-          <CardHeader>
-            <CardTitle className="text-xl font-semibold">
+          <CardHeader className="pb-4 md:pb-6">
+            <CardTitle className="text-lg md:text-xl font-semibold">
               Best Time to Visit {data.destination.region}
             </CardTitle>
           </CardHeader>

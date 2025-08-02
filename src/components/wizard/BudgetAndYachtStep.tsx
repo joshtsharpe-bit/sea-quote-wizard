@@ -1,6 +1,7 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Slider } from '@/components/ui/slider';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import { DollarSign, Ship, Users, AlertCircle } from 'lucide-react';
 import { WizardData } from '../YachtCharterWizard';
 
@@ -99,6 +100,14 @@ const BudgetAndYachtStep: React.FC<BudgetAndYachtStepProps> = ({ data, updateDat
         capacity: yacht.capacity
       }
     });
+    
+    // Smooth scroll to show next button when yacht is selected
+    setTimeout(() => {
+      const button = document.getElementById('next-button');
+      if (button) {
+        button.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }, 300);
   };
 
   const isYachtAffordable = (yacht: typeof yachtTypes[0]) => {
@@ -114,23 +123,23 @@ const BudgetAndYachtStep: React.FC<BudgetAndYachtStepProps> = ({ data, updateDat
   };
 
   return (
-    <div className="max-w-6xl mx-auto space-y-8">
+    <div className="max-w-6xl mx-auto space-y-6 md:space-y-8 px-4 md:px-0">
       <Card className="glass">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-3 text-2xl">
-            <DollarSign className="h-6 w-6 text-primary" />
+        <CardHeader className="pb-4 md:pb-6">
+          <CardTitle className="flex items-center gap-2 md:gap-3 text-xl md:text-2xl">
+            <DollarSign className="h-5 w-5 md:h-6 md:w-6 text-primary" />
             What's your budget range?
           </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-6">
+        <CardContent className="space-y-4 md:space-y-6">
           <div className="space-y-4">
             <div className="flex justify-between items-center">
               <label className="text-sm font-medium">Budget Range (USD)</label>
               <div className="text-right">
-                <div className="text-2xl font-bold text-primary">
+                <div className="text-lg md:text-2xl font-bold text-primary">
                   ${budgetRange[0].toLocaleString()} - ${budgetRange[1].toLocaleString()}
                 </div>
-                <div className="text-sm text-muted-foreground">Per week</div>
+                <div className="text-xs md:text-sm text-muted-foreground">Per week</div>
               </div>
             </div>
             
@@ -150,9 +159,9 @@ const BudgetAndYachtStep: React.FC<BudgetAndYachtStepProps> = ({ data, updateDat
           </div>
 
           {minimumBudget > 20000 && (
-            <div className="flex items-start gap-3 p-4 bg-orange-50 border border-orange-200 rounded-lg">
-              <AlertCircle className="h-5 w-5 text-orange-600 mt-0.5" />
-              <div className="text-sm">
+            <div className="flex items-start gap-2 md:gap-3 p-3 md:p-4 bg-orange-50 border border-orange-200 rounded-lg">
+              <AlertCircle className="h-4 w-4 md:h-5 md:w-5 text-orange-600 mt-0.5 flex-shrink-0" />
+              <div className="text-xs md:text-sm">
                 <div className="font-medium text-orange-800">Minimum Budget Notice</div>
                 <div className="text-orange-700 mt-1">
                   Based on your selections ({data.guests} guests, {data.duration} nights in {data.destination?.region}), 
@@ -165,14 +174,81 @@ const BudgetAndYachtStep: React.FC<BudgetAndYachtStepProps> = ({ data, updateDat
       </Card>
 
       <Card className="glass">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-3 text-2xl">
-            <Ship className="h-6 w-6 text-primary" />
+        <CardHeader className="pb-4 md:pb-6">
+          <CardTitle className="flex items-center gap-2 md:gap-3 text-xl md:text-2xl">
+            <Ship className="h-5 w-5 md:h-6 md:w-6 text-primary" />
             Choose your yacht type
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {/* Mobile: Use carousel for yacht types */}
+          <div className="md:hidden">
+            <Carousel className="w-full">
+              <CarouselContent className="-ml-2 md:-ml-4">
+                {yachtTypes.map((yacht) => {
+                  const isAffordable = isYachtAffordable(yacht);
+                  const isSuitable = isYachtSuitable(yacht);
+                  const isAvailable = isYachtAvailable(yacht);
+                  
+                  return (
+                    <CarouselItem key={yacht.id} className="pl-2 md:pl-4 basis-5/6">
+                      <Card
+                        className={`cursor-pointer group btn-3d transition-all duration-300 hover:scale-105 overflow-hidden ${
+                          selectedYacht === yacht.id ? 'ring-2 ring-primary shadow-large' : ''
+                        } ${!isAvailable ? 'opacity-50 cursor-not-allowed' : ''}`}
+                        onClick={() => isAvailable && handleYachtSelect(yacht)}
+                      >
+                        <div className="relative h-36 overflow-hidden">
+                          <img
+                            src={yacht.image}
+                            alt={yacht.name}
+                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                          <div className="absolute bottom-2 left-2 text-white">
+                            <h3 className="text-sm font-bold">{yacht.name}</h3>
+                            <div className="flex items-center gap-1 text-xs opacity-90">
+                              <Users className="h-3 w-3" />
+                              <span>Up to {yacht.capacity}</span>
+                            </div>
+                          </div>
+                          
+                          {!isAvailable && (
+                            <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+                              <div className="text-white text-center">
+                                <AlertCircle className="h-6 w-6 mx-auto mb-1" />
+                                <div className="text-xs font-medium">
+                                  {!isAffordable && "Outside budget"}
+                                  {!isSuitable && "Too small"}
+                                </div>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                        
+                        <CardContent className="p-3">
+                          <p className="text-xs text-muted-foreground mb-2">{yacht.description}</p>
+                          <div className="space-y-1">
+                            <div className="flex justify-between text-xs">
+                              <span>Price Range:</span>
+                              <span className="font-medium">
+                                ${yacht.minPrice.toLocaleString()} - ${yacht.maxPrice.toLocaleString()}
+                              </span>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </CarouselItem>
+                  );
+                })}
+              </CarouselContent>
+              <CarouselPrevious />
+              <CarouselNext />
+            </Carousel>
+          </div>
+
+          {/* Desktop: Grid layout */}
+          <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {yachtTypes.map((yacht) => {
               const isAffordable = isYachtAffordable(yacht);
               const isSuitable = isYachtSuitable(yacht);
@@ -234,7 +310,7 @@ const BudgetAndYachtStep: React.FC<BudgetAndYachtStepProps> = ({ data, updateDat
             })}
           </div>
           
-          <div className="mt-6 text-center text-sm text-muted-foreground">
+          <div className="mt-4 md:mt-6 text-center text-xs md:text-sm text-muted-foreground">
             <p>Yacht availability and pricing depend on your guest count and budget range.</p>
             <p>Grayed out yachts are either outside your budget or cannot accommodate your group size.</p>
           </div>

@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import { MapPin, Heart, PartyPopper, Trophy, Waves, Users, Sparkles, Coffee, Check } from 'lucide-react';
 import { WizardData } from '../YachtCharterWizard';
 
@@ -77,20 +78,72 @@ const WhereAndWhyStep: React.FC<WhereAndWhyStepProps> = ({ data, updateData }) =
     
     setSelectedReasons(newReasons);
     updateData({ reasons: newReasons });
+    
+    // Smooth scroll to show next button when selection is made
+    if (newReasons.length > 0 && selectedDestination) {
+      setTimeout(() => {
+        const button = document.getElementById('next-button');
+        if (button) {
+          button.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }, 300);
+    }
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8">
+    <div className="max-w-4xl mx-auto space-y-6 md:space-y-8 px-4 md:px-0">
       {/* Where Section */}
       <Card className="glass">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-3 text-2xl">
-            <MapPin className="h-6 w-6 text-primary" />
+        <CardHeader className="pb-4 md:pb-6">
+          <CardTitle className="flex items-center gap-2 md:gap-3 text-xl md:text-2xl">
+            <MapPin className="h-5 w-5 md:h-6 md:w-6 text-primary" />
             Where do you want to go?
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid md:grid-cols-3 gap-6">
+          {/* Mobile: Use carousel for destinations */}
+          <div className="md:hidden">
+            <Carousel className="w-full">
+              <CarouselContent className="-ml-2 md:-ml-4">
+                {Object.entries(destinations).map(([key, destination]) => (
+                  <CarouselItem key={key} className="pl-2 md:pl-4 basis-5/6">
+                    <Card
+                      className={`cursor-pointer group btn-3d transition-all duration-300 hover:scale-105 overflow-hidden ${
+                        selectedDestination === key ? 'ring-2 ring-primary shadow-large' : ''
+                      }`}
+                      onClick={() => handleDestinationSelect(key)}
+                    >
+                      <div className="relative h-40 overflow-hidden">
+                        <img
+                          src={destination.image}
+                          alt={destination.name}
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                        {selectedDestination === key && (
+                          <div className="absolute top-2 right-2 bg-primary text-primary-foreground rounded-full p-1">
+                            <Check className="h-3 w-3" />
+                          </div>
+                        )}
+                        <div className="absolute bottom-2 left-2 text-white">
+                          <h3 className="text-lg font-bold">{destination.name}</h3>
+                          <p className="text-xs opacity-90">From ${destination.basePrice.toLocaleString()}/week</p>
+                        </div>
+                      </div>
+                      <CardContent className="p-3 text-center">
+                        <p className="text-muted-foreground text-xs">{destination.description}</p>
+                      </CardContent>
+                    </Card>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <CarouselPrevious />
+              <CarouselNext />
+            </Carousel>
+          </div>
+
+          {/* Desktop: Grid layout */}
+          <div className="hidden md:grid md:grid-cols-3 gap-6">
             {Object.entries(destinations).map(([key, destination]) => (
               <Card
                 key={key}
@@ -127,15 +180,44 @@ const WhereAndWhyStep: React.FC<WhereAndWhyStepProps> = ({ data, updateData }) =
 
       {/* Why Section */}
       <Card className="glass">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-3 text-2xl">
-            <Heart className="h-6 w-6 text-primary" />
+        <CardHeader className="pb-4 md:pb-6">
+          <CardTitle className="flex items-center gap-2 md:gap-3 text-xl md:text-2xl">
+            <Heart className="h-5 w-5 md:h-6 md:w-6 text-primary" />
             What's the occasion?
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-muted-foreground mb-6">Select all that apply to help us tailor your experience</p>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <p className="text-muted-foreground mb-6 text-sm md:text-base">Select all that apply to help us tailor your experience</p>
+          
+          {/* Mobile: Use carousel for reasons */}
+          <div className="md:hidden">
+            <Carousel className="w-full">
+              <CarouselContent className="-ml-2">
+                {reasons.map((reason) => (
+                  <CarouselItem key={reason.id} className="pl-2 basis-1/2">
+                    <Button
+                      variant={selectedReasons.includes(reason.id) ? "default" : "outline"}
+                      className={`h-auto p-3 flex flex-col items-center gap-2 btn-3d w-full ${
+                        selectedReasons.includes(reason.id) ? 'bg-primary hover:bg-primary/90' : ''
+                      }`}
+                      onClick={() => handleReasonToggle(reason.id)}
+                    >
+                      <reason.icon className="h-5 w-5" />
+                      <div className="text-center">
+                        <div className="font-medium text-xs">{reason.label}</div>
+                        <div className="text-xs opacity-80 mt-1 leading-tight">{reason.description}</div>
+                      </div>
+                    </Button>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <CarouselPrevious />
+              <CarouselNext />
+            </Carousel>
+          </div>
+
+          {/* Desktop: Grid layout */}
+          <div className="hidden md:grid grid-cols-2 lg:grid-cols-4 gap-4">
             {reasons.map((reason) => (
               <Button
                 key={reason.id}
