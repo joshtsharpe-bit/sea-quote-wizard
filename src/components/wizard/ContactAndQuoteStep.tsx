@@ -58,24 +58,23 @@ const ContactAndQuoteStep: React.FC<ContactAndQuoteStepProps> = ({
     { value: 'evening', label: 'Evening (6:00 - 8:00 PM)' }
   ];
 
-  // Calculate estimated price
+  // Calculate estimated price with detailed breakdown
+  const getSubtotal = () => {
+    if (!data.destination || !data.yachtType) return 0;
+    return Math.round(data.destination.basePrice * data.yachtType.priceMultiplier * data.duration);
+  };
+
+  const getBareboatDiscountAmount = () => {
+    if (!data.isBareboatCharter) return 0;
+    return Math.round(getSubtotal() * 0.4); // 40% discount
+  };
+
+  const getFinalPrice = () => {
+    return getSubtotal() - getBareboatDiscountAmount();
+  };
+
   const calculateEstimatedPrice = () => {
-    if (!data.destination || !data.yachtType || !data.budgetRange) return 0;
-    const basePrice = data.destination.basePrice;
-    const durationMultiplier = data.duration / 7;
-    const yachtMultiplier = data.yachtType.priceMultiplier;
-    const guestFactor = Math.max(1, data.guests / 8);
-    let estimatedPrice = basePrice * durationMultiplier * yachtMultiplier * guestFactor;
-
-    // Apply bareboat discount
-    if (data.isBareboatCharter) {
-      estimatedPrice *= 0.7; // 30% discount for bareboat
-    }
-
-    // Keep within budget range
-    const [minBudget, maxBudget] = data.budgetRange;
-    estimatedPrice = Math.min(Math.max(estimatedPrice, minBudget), maxBudget);
-    return Math.round(estimatedPrice);
+    return getFinalPrice();
   };
 
   const estimatedPrice = calculateEstimatedPrice();
@@ -95,19 +94,20 @@ const ContactAndQuoteStep: React.FC<ContactAndQuoteStepProps> = ({
       {/* Quote Summary */}
       <Card className="glass border-primary/20 bg-gradient-card">
         <CardHeader>
-          <CardTitle className="flex items-center gap-3 text-2xl">
+          <CardTitle className="flex items-center gap-3 text-2xl font-elegant">
             <DollarSign className="h-6 w-6 text-primary" />
             Your Charter Quote
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid lg:grid-cols-2 gap-8">
+            {/* Charter Details */}
             <div className="space-y-4">
               <div className="flex items-center gap-3">
                 <MapPin className="h-5 w-5 text-primary" />
                 <div>
                   <div className="font-medium">{data.destination?.name}</div>
-                  <div className="text-sm text-muted-foreground">{data.duration} nights</div>
+                  <div className="text-sm text-muted-foreground">{data.destination?.region}</div>
                 </div>
               </div>
               
@@ -116,7 +116,7 @@ const ContactAndQuoteStep: React.FC<ContactAndQuoteStepProps> = ({
                 <div>
                   <div className="font-medium">{data.yachtType?.name}</div>
                   <div className="text-sm text-muted-foreground">
-                    {data.isBareboatCharter ? 'Bareboat Charter' : 'Fully Crewed'}
+                    Capacity: {data.yachtType?.capacity} guests • {data.isBareboatCharter ? 'Bareboat Charter' : 'Fully Crewed'}
                   </div>
                 </div>
               </div>
@@ -124,7 +124,7 @@ const ContactAndQuoteStep: React.FC<ContactAndQuoteStepProps> = ({
               <div className="flex items-center gap-3">
                 <Users className="h-5 w-5 text-primary" />
                 <div>
-                  <div className="font-medium">{data.guests} Guests</div>
+                  <div className="font-medium">{data.guests} Guests for {data.duration} days</div>
                   <div className="text-sm text-muted-foreground">
                     {data.guestTypes?.join(', ') || 'Mixed group'}
                   </div>
@@ -132,20 +132,55 @@ const ContactAndQuoteStep: React.FC<ContactAndQuoteStepProps> = ({
               </div>
             </div>
             
-            <div className="text-right">
-              <div className="text-sm text-muted-foreground mb-2">Estimated Range</div>
-              <div className="text-4xl font-bold text-primary mb-2">
-                ${(estimatedPrice * 0.85).toLocaleString()} - ${(estimatedPrice * 1.15).toLocaleString()}
-              </div>
-              <div className="text-sm text-muted-foreground">
-                For {data.duration} nights • {data.guests} guests
-              </div>
-              <div className="mt-4 p-3 bg-secondary/20 rounded-lg">
-                <div className="text-xs text-muted-foreground">
-                  * Final pricing depends on specific yacht availability, 
-                  dates, and additional services. A broker will provide 
-                  exact quotes from available yachts.
+            {/* Price Breakdown */}
+            <div className="space-y-4">
+              <h3 className="font-elegant text-lg mb-4">Price Breakdown</h3>
+              
+              <div className="space-y-3">
+                <div className="flex justify-between text-sm">
+                  <span className="text-muted-foreground">Base Charter Rate</span>
+                  <span>${data.destination?.basePrice.toLocaleString()}/week</span>
                 </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-muted-foreground">Yacht Premium ({data.yachtType?.name})</span>
+                  <span>{data.yachtType?.priceMultiplier}x multiplier</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-muted-foreground">Duration</span>
+                  <span>{data.duration} days ({Math.round(data.duration / 7 * 10) / 10} weeks)</span>
+                </div>
+                
+                <div className="border-t pt-3">
+                  <div className="flex justify-between font-medium">
+                    <span>Subtotal</span>
+                    <span>${getSubtotal().toLocaleString()}</span>
+                  </div>
+                </div>
+
+                {data.isBareboatCharter && (
+                  <>
+                    <div className="flex justify-between text-emerald-600 font-medium bg-emerald-50 dark:bg-emerald-950/30 px-3 py-2 rounded-lg">
+                      <span>Bareboat Discount (40%)</span>
+                      <span>-${getBareboatDiscountAmount().toLocaleString()}</span>
+                    </div>
+                    <div className="text-xs text-muted-foreground px-3">
+                      <p className="mb-1">✓ You save on crew, provisions, and service fees</p>
+                      <p>⚠️ Sailing certification and self-provisioning required</p>
+                    </div>
+                  </>
+                )}
+                
+                <div className="border-t pt-3">
+                  <div className="flex justify-between text-xl font-bold font-elegant">
+                    <span>Total Estimated Cost</span>
+                    <span className="text-primary">${getFinalPrice().toLocaleString()}</span>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="text-xs text-muted-foreground mt-4 p-3 bg-secondary/20 rounded-lg">
+                * Final pricing depends on specific yacht availability, dates, and additional services. 
+                A broker will provide exact quotes from available yachts.
               </div>
             </div>
           </div>
@@ -155,7 +190,7 @@ const ContactAndQuoteStep: React.FC<ContactAndQuoteStepProps> = ({
       {/* Contact Form */}
       <Card className="glass">
         <CardHeader>
-          <CardTitle className="flex items-center gap-3 text-2xl">
+          <CardTitle className="flex items-center gap-3 text-2xl font-elegant">
             <User className="h-6 w-6 text-primary" />
             Contact Information
           </CardTitle>
