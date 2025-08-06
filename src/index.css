@@ -2,14 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
-/* KŌKAI Charters Design System - Nautical Elegance
+/* Old Gold Charters Design System - Nautical Elegance
 Navy, Sand & Ocean Palette - Modern Maritime Luxury
 All colors MUST be HSL.
 */
 
 @layer base {
   :root {
-    /* KŌKAI Brand Color Palette */
+    /* Old Gold Brand Color Palette */
     --background: 45 25% 92%;          /* Warm sand cream */
     --foreground: 210 100% 8%;         /* Deep navy */
 
@@ -21,12 +21,12 @@ All colors MUST be HSL.
     --popover-foreground: 210 100% 8%;
 
     /* Primary brand colors - Navy Blue */
-    --primary: 210 100% 12%;           /* KŌKAI Navy */
+    --primary: 210 100% 12%;           /* Old Gold Navy */
     --primary-foreground: 45 25% 92%;
     --primary-glow: 210 80% 20%;       /* Lighter navy */
 
     /* Secondary - Sand/Cream */
-    --secondary: 45 30% 78%;           /* KŌKAI Sand */
+    --secondary: 45 30% 78%;           /* Old Gold Sand */
     --secondary-foreground: 210 100% 8%;
 
     /* Muted - Soft neutrals */
@@ -34,7 +34,7 @@ All colors MUST be HSL.
     --muted-foreground: 210 50% 25%;   /* Muted navy */
 
     /* Accent - Teal */
-    --accent: 180 25% 45%;             /* KŌKAI Teal */
+    --accent: 180 25% 45%;             /* Old Gold Teal */
     --accent-foreground: 45 25% 92%;
 
     /* Destructive */
@@ -48,7 +48,7 @@ All colors MUST be HSL.
 
     --radius: 0.875rem;
 
-    /* KŌKAI brand gradients */
+    /* Old Gold brand gradients */
     --gradient-ocean: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--primary-glow)) 100%);
     --gradient-hero: linear-gradient(180deg, hsl(45 25% 94%) 0%, hsl(45 20% 88%) 100%);
     --gradient-card: linear-gradient(145deg, hsl(var(--card)) 0%, hsl(45 15% 90%) 100%);
@@ -56,7 +56,7 @@ All colors MUST be HSL.
     --gradient-vintage: linear-gradient(135deg, hsl(210 100% 12%) 0%, hsl(180 25% 45%) 100%);
     --gradient-warm: linear-gradient(145deg, hsl(45 20% 96%) 0%, hsl(45 25% 92%) 100%);
     
-    /* KŌKAI elegant shadows */
+    /* Old Gold elegant shadows */
     --shadow-soft: 0 4px 20px hsl(210 50% 20% / 0.08);
     --shadow-medium: 0 8px 30px hsl(210 50% 20% / 0.12);
     --shadow-large: 0 20px 50px hsl(210 50% 20% / 0.15);
@@ -68,7 +68,7 @@ All colors MUST be HSL.
     --transition-smooth: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     --transition-vintage: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
     
-    /* Sidebar - KŌKAI theme */
+    /* Sidebar - Old Gold theme */
     --sidebar-background: 45 20% 96%;
     --sidebar-foreground: 210 100% 8%;
     --sidebar-primary: 210 100% 12%;
@@ -80,7 +80,7 @@ All colors MUST be HSL.
   }
 
   .dark {
-    /* Dark Theme - KŌKAI Night */
+    /* Dark Theme - Old Gold Night */
     --background: 210 80% 4%;          /* Deep navy */
     --foreground: 45 25% 92%;          /* Light sand */
 
@@ -110,7 +110,7 @@ All colors MUST be HSL.
     --input: 210 30% 25%;
     --ring: 200 80% 75%;
     
-    /* Dark KŌKAI gradients */
+    /* Dark Old Gold gradients */
     --gradient-ocean: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--primary-glow)) 100%);
     --gradient-hero: linear-gradient(180deg, hsl(210 80% 4%) 0%, hsl(210 70% 8%) 100%);
     --gradient-card: linear-gradient(145deg, hsl(var(--card)) 0%, hsl(210 60% 12%) 100%);

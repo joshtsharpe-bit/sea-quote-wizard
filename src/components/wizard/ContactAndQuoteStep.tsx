@@ -7,19 +7,23 @@ import { Textarea } from '@/components/ui/textarea';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { User, Mail, Phone, Calendar as CalendarIcon, MessageSquare, DollarSign, Ship, MapPin, Users } from 'lucide-react';
+import { User, Mail, Phone, Calendar as CalendarIcon, MessageSquare, DollarSign, Ship, MapPin, Users, Anchor } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { WizardData } from '../YachtCharterWizard';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
 
 interface ContactAndQuoteStepProps {
   data: WizardData;
   updateData: (updates: Partial<WizardData>) => void;
+  showSubmitButton?: boolean;
 }
 
 const ContactAndQuoteStep: React.FC<ContactAndQuoteStepProps> = ({
   data,
-  updateData
+  updateData,
+  showSubmitButton = false
 }) => {
   const [contactDetails, setContactDetails] = useState(data.contactDetails || {
     firstName: '',
@@ -36,6 +40,7 @@ const ContactAndQuoteStep: React.FC<ContactAndQuoteStepProps> = ({
 
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(contactDetails.appointmentDate);
   const [datePickerOpen, setDatePickerOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleContactChange = (field: string, value: string | Date | undefined) => {
     const updated = {
@@ -115,6 +120,89 @@ const ContactAndQuoteStep: React.FC<ContactAndQuoteStepProps> = ({
       return method;
     });
     return labels.join(' and ');
+  };
+
+  const handleSubmitForm = async () => {
+    if (!contactDetails.firstName || !contactDetails.lastName || !contactDetails.email) {
+      toast.error('Please fill in all required fields');
+      return;
+    }
+
+    if ((contactDetails.contactMethods || []).includes('call') && !contactDetails.phone) {
+      toast.error('Phone number is required for phone calls');
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      const submissionData = {
+        // Contact details
+        first_name: contactDetails.firstName,
+        last_name: contactDetails.lastName,
+        email: contactDetails.email,
+        phone: contactDetails.phone,
+        contact_methods: contactDetails.contactMethods,
+        preferred_date: contactDetails.preferredDate,
+        preferred_time: contactDetails.preferredTime,
+        appointment_date: contactDetails.appointmentDate ? contactDetails.appointmentDate.toISOString().split('T')[0] : null,
+        appointment_time: contactDetails.appointmentTime,
+        special_requests: contactDetails.specialRequests,
+        
+        // Charter details
+        destination_name: data.destination?.name,
+        destination_region: data.destination?.region,
+        destination_image: data.destination?.image,
+        destination_base_price: data.destination?.basePrice,
+        destination_countries: data.destination?.countries,
+        
+        yacht_id: data.yachtType?.id,
+        yacht_name: data.yachtType?.name,
+        yacht_type: data.yachtType?.type,
+        yacht_image: data.yachtType?.image,
+        yacht_price_multiplier: data.yachtType?.priceMultiplier,
+        yacht_capacity: data.yachtType?.capacity,
+        
+        start_date: data.startDate,
+        end_date: data.endDate,
+        duration: data.duration,
+        guests: data.guests,
+        guest_types: data.guestTypes,
+        
+        budget_min: data.budgetRange?.[0],
+        budget_max: data.budgetRange?.[1],
+        
+        amenities: data.amenities,
+        reasons: data.reasons,
+        
+        is_bareboat_charter: data.isBareboatCharter || false,
+        has_chartered: data.hasChartered,
+        consultation_requested: data.consultationRequested || false,
+        
+        submitted_at: new Date().toISOString(),
+        is_completed: true
+      };
+
+      const { error } = await supabase
+        .from('yacht_charter_submissions')
+        .insert([submissionData]);
+
+      if (error) {
+        console.error('Submission error:', error);
+        toast.error('Failed to submit your request. Please try again.');
+        return;
+      }
+
+      toast.success('Your charter request has been submitted successfully! A broker will contact you soon.');
+      
+      // Optional: redirect or show success state
+      
+    } catch (error) {
+      console.error('Unexpected error:', error);
+      toast.error('An unexpected error occurred. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -445,6 +533,21 @@ const ContactAndQuoteStep: React.FC<ContactAndQuoteStepProps> = ({
           </div>
         </CardContent>
       </Card>
+
+      {/* Submit Button */}
+      {showSubmitButton && (
+        <div className="flex justify-center mt-8">
+          <Button
+            onClick={handleSubmitForm}
+            disabled={isSubmitting || !contactDetails.firstName || !contactDetails.lastName || !contactDetails.email}
+            className="btn-3d bg-accent hover:bg-accent/90 px-8 py-3 text-lg"
+            size="lg"
+          >
+            {isSubmitting ? 'Submitting...' : 'Get Your Quote'}
+            <Anchor className="h-5 w-5 ml-2" />
+          </Button>
+        </div>
+      )}
     </div>
   );
 };

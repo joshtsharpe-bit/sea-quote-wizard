@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { ChevronLeft, ChevronRight, Anchor, Ship } from 'lucide-react';
-import KokaiLogo from './KokaiLogo';
+import OldGoldLogo from './OldGoldLogo';
 import { Carousel, CarouselContent, CarouselItem, CarouselApi } from '@/components/ui/carousel';
 import DestinationStep from './wizard/DestinationStep';
 import YachtTypeStep from './wizard/YachtTypeStep';
@@ -118,7 +118,7 @@ const YachtCharterWizard: React.FC = () => {
       <div className="container mx-auto px-4 py-8">
         {/* Header with Logo */}
         <div className="flex justify-center mb-8">
-          <KokaiLogo size="lg" className="text-center" />
+          <OldGoldLogo size="lg" className="text-center" />
         </div>
         
         {/* Tab Navigation */}
@@ -188,14 +188,11 @@ const YachtCharterWizard: React.FC = () => {
 
         {currentStep === STEPS.length - 1 && (
           <div id="quote-button" className="flex justify-center mt-8 animate-fade-in">
-            <Button
-              onClick={() => {/* Handle final submission */}}
-              className="btn-3d bg-accent hover:bg-accent/90 px-8 py-3 text-lg"
-              size="lg"
-            >
-              Get Your Quote
-              <Anchor className="h-5 w-5 ml-2" />
-            </Button>
+            <ContactAndQuoteStep
+              data={wizardData}
+              updateData={updateWizardData}
+              showSubmitButton={true}
+            />
           </div>
         )}
       </div>
