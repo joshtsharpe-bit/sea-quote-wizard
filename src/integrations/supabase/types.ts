@@ -14,7 +14,129 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      yacht_charter_submissions: {
+        Row: {
+          amenities: string[] | null
+          appointment_date: string | null
+          appointment_time: string | null
+          budget_max: number | null
+          budget_min: number | null
+          consultation_requested: boolean | null
+          contact_methods: string[] | null
+          created_at: string
+          destination_base_price: number | null
+          destination_countries: string[] | null
+          destination_image: string | null
+          destination_name: string | null
+          destination_region: string | null
+          duration: number | null
+          email: string | null
+          end_date: string | null
+          first_name: string | null
+          guest_types: string[] | null
+          guests: number | null
+          has_chartered: boolean | null
+          id: string
+          is_bareboat_charter: boolean | null
+          is_completed: boolean | null
+          last_name: string | null
+          phone: string | null
+          preferred_date: string | null
+          preferred_time: string | null
+          reasons: string[] | null
+          special_requests: string | null
+          start_date: string | null
+          submitted_at: string | null
+          updated_at: string
+          yacht_capacity: number | null
+          yacht_id: string | null
+          yacht_image: string | null
+          yacht_name: string | null
+          yacht_price_multiplier: number | null
+          yacht_type: string | null
+        }
+        Insert: {
+          amenities?: string[] | null
+          appointment_date?: string | null
+          appointment_time?: string | null
+          budget_max?: number | null
+          budget_min?: number | null
+          consultation_requested?: boolean | null
+          contact_methods?: string[] | null
+          created_at?: string
+          destination_base_price?: number | null
+          destination_countries?: string[] | null
+          destination_image?: string | null
+          destination_name?: string | null
+          destination_region?: string | null
+          duration?: number | null
+          email?: string | null
+          end_date?: string | null
+          first_name?: string | null
+          guest_types?: string[] | null
+          guests?: number | null
+          has_chartered?: boolean | null
+          id?: string
+          is_bareboat_charter?: boolean | null
+          is_completed?: boolean | null
+          last_name?: string | null
+          phone?: string | null
+          preferred_date?: string | null
+          preferred_time?: string | null
+          reasons?: string[] | null
+          special_requests?: string | null
+          start_date?: string | null
+          submitted_at?: string | null
+          updated_at?: string
+          yacht_capacity?: number | null
+          yacht_id?: string | null
+          yacht_image?: string | null
+          yacht_name?: string | null
+          yacht_price_multiplier?: number | null
+          yacht_type?: string | null
+        }
+        Update: {
+          amenities?: string[] | null
+          appointment_date?: string | null
+          appointment_time?: string | null
+          budget_max?: number | null
+          budget_min?: number | null
+          consultation_requested?: boolean | null
+          contact_methods?: string[] | null
+          created_at?: string
+          destination_base_price?: number | null
+          destination_countries?: string[] | null
+          destination_image?: string | null
+          destination_name?: string | null
+          destination_region?: string | null
+          duration?: number | null
+          email?: string | null
+          end_date?: string | null
+          first_name?: string | null
+          guest_types?: string[] | null
+          guests?: number | null
+          has_chartered?: boolean | null
+          id?: string
+          is_bareboat_charter?: boolean | null
+          is_completed?: boolean | null
+          last_name?: string | null
+          phone?: string | null
+          preferred_date?: string | null
+          preferred_time?: string | null
+          reasons?: string[] | null
+          special_requests?: string | null
+          start_date?: string | null
+          submitted_at?: string | null
+          updated_at?: string
+          yacht_capacity?: number | null
+          yacht_id?: string | null
+          yacht_image?: string | null
+          yacht_name?: string | null
+          yacht_price_multiplier?: number | null
+          yacht_type?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
