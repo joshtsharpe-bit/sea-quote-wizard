@@ -109,7 +109,7 @@ const WhereAndWhyStep: React.FC<WhereAndWhyStepProps> = ({ data, updateData }) =
                   <CarouselItem key={key} className="pl-2 md:pl-4 basis-5/6">
                     <Card
                       className={`cursor-pointer group btn-3d transition-all duration-300 hover:scale-105 overflow-hidden ${
-                        selectedDestination === key ? 'ring-2 ring-primary shadow-large' : ''
+                        selectedDestination === key ? 'ring-2 ring-accent shadow-large' : ''
                       }`}
                       onClick={() => handleDestinationSelect(key)}
                     >
@@ -121,7 +121,7 @@ const WhereAndWhyStep: React.FC<WhereAndWhyStepProps> = ({ data, updateData }) =
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
                         {selectedDestination === key && (
-                          <div className="absolute top-2 right-2 bg-primary text-primary-foreground rounded-full p-1">
+                          <div className="absolute top-2 right-2 bg-accent text-accent-foreground rounded-full p-1">
                             <Check className="h-3 w-3" />
                           </div>
                         )}
@@ -148,7 +148,7 @@ const WhereAndWhyStep: React.FC<WhereAndWhyStepProps> = ({ data, updateData }) =
               <Card
                 key={key}
                 className={`cursor-pointer group btn-3d transition-all duration-300 hover:scale-105 overflow-hidden ${
-                  selectedDestination === key ? 'ring-2 ring-primary shadow-large' : ''
+                  selectedDestination === key ? 'ring-2 ring-accent shadow-large' : ''
                 }`}
                 onClick={() => handleDestinationSelect(key)}
               >
@@ -159,11 +159,11 @@ const WhereAndWhyStep: React.FC<WhereAndWhyStepProps> = ({ data, updateData }) =
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                  {selectedDestination === key && (
-                    <div className="absolute top-3 right-3 bg-primary text-primary-foreground rounded-full p-2">
-                      <Check className="h-4 w-4" />
-                    </div>
-                  )}
+                    {selectedDestination === key && (
+                      <div className="absolute top-3 right-3 bg-accent text-accent-foreground rounded-full p-2">
+                        <Check className="h-4 w-4" />
+                      </div>
+                    )}
                   <div className="absolute bottom-4 left-4 text-white">
                     <h3 className="text-xl font-bold mb-1">{destination.name}</h3>
                     <p className="text-sm opacity-90">From ${destination.basePrice.toLocaleString()}/week</p>
@@ -198,7 +198,7 @@ const WhereAndWhyStep: React.FC<WhereAndWhyStepProps> = ({ data, updateData }) =
                     <Button
                       variant={selectedReasons.includes(reason.id) ? "default" : "outline"}
                       className={`min-h-[100px] p-3 flex flex-col items-center justify-center gap-2 btn-3d w-full ${
-                        selectedReasons.includes(reason.id) ? 'bg-primary hover:bg-primary/90' : ''
+                        selectedReasons.includes(reason.id) ? 'bg-accent hover:bg-accent/90 text-accent-foreground' : ''
                       }`}
                       onClick={() => handleReasonToggle(reason.id)}
                     >
@@ -223,7 +223,7 @@ const WhereAndWhyStep: React.FC<WhereAndWhyStepProps> = ({ data, updateData }) =
                 key={reason.id}
                 variant={selectedReasons.includes(reason.id) ? "default" : "outline"}
                 className={`min-h-[120px] p-4 flex flex-col items-center justify-center gap-3 btn-3d ${
-                  selectedReasons.includes(reason.id) ? 'bg-primary hover:bg-primary/90' : ''
+                  selectedReasons.includes(reason.id) ? 'bg-accent hover:bg-accent/90 text-accent-foreground' : ''
                 }`}
                 onClick={() => handleReasonToggle(reason.id)}
               >

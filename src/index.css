@@ -100,7 +100,7 @@ All colors MUST be HSL.
     --muted: 210 40% 15%;              /* Dark navy muted */
     --muted-foreground: 45 15% 70%;
 
-    --accent: 180 30% 60%;             /* Light teal */
+    --accent: 27 90% 60%;             /* Marigold in dark for contrast */
     --accent-foreground: 210 80% 4%;
 
     --destructive: 0 65% 45%;

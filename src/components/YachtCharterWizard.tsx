@@ -160,10 +160,19 @@ const YachtCharterWizard: React.FC = () => {
         <div className="flex justify-center">
           <div className="w-full max-w-6xl">
             <div className="animate-fade-in">
-              <CurrentStepComponent
-                data={wizardData}
-                updateData={updateWizardData}
-              />
+              {currentStep === STEPS.length - 1 ? (
+                <ContactAndQuoteStep
+                  data={wizardData}
+                  updateData={updateWizardData}
+                  showSubmitButton
+                />
+              ) : (
+                <CurrentStepComponent
+                  data={wizardData}
+                  updateData={updateWizardData}
+                />
+              )}
+
             </div>
           </div>
         </div>
