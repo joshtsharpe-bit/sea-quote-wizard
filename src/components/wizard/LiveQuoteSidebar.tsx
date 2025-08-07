@@ -4,6 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { MapPin, Ship, Users, Calendar, Package, DollarSign } from 'lucide-react';
 import { WizardData } from '../YachtCharterWizard';
+import { computeQuote } from '@/lib/pricing';
 
 interface LiveQuoteSidebarProps {
   data: WizardData;
@@ -11,12 +12,8 @@ interface LiveQuoteSidebarProps {
 }
 
 const LiveQuoteSidebar: React.FC<LiveQuoteSidebarProps> = ({ data, currentStep }) => {
-  const calculateTotalPrice = () => {
-    if (!data.destination || !data.yachtType) return 0;
-    const basePrice = data.destination.basePrice * data.yachtType.priceMultiplier * data.duration;
-    const bareboatDiscount = data.isBareboatCharter ? 0.4 : 0; // 40% discount for bareboat
-    return Math.round(basePrice * (1 - bareboatDiscount));
-  };
+  const calculateTotalPrice = () => computeQuote(data).total;
+
 
   const getStepStatus = (stepIndex: number) => {
     if (stepIndex < currentStep) return 'completed';

@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import { WizardData } from '../YachtCharterWizard';
 import { useToast } from '@/hooks/use-toast';
+import { computeQuote } from '@/lib/pricing';
 
 interface QuoteSummaryProps {
   data: WizardData;
@@ -42,19 +43,7 @@ const QuoteSummary: React.FC<QuoteSummaryProps> = ({ data, onNext }) => {
   const [email, setEmail] = useState('');
   const { toast } = useToast();
 
-  const getSubtotal = () => {
-    if (!data.destination || !data.yachtType) return 0;
-    return Math.round(data.destination.basePrice * data.yachtType.priceMultiplier * data.duration);
-  };
-
-  const getBareboatDiscountAmount = () => {
-    if (!data.isBareboatCharter) return 0;
-    return Math.round(getSubtotal() * 0.4); // 40% discount
-  };
-
-  const getTotalPrice = () => {
-    return getSubtotal() - getBareboatDiscountAmount();
-  };
+  const breakdown = computeQuote(data);
 
   const getDurationText = (days: number) => {
     if (days === 1) return '1 day';
@@ -106,7 +95,7 @@ const QuoteSummary: React.FC<QuoteSummaryProps> = ({ data, onNext }) => {
           
           <div className="text-center">
             <div className="text-4xl font-bold text-primary mb-2">
-              ${getTotalPrice().toLocaleString()}
+              ${breakdown.total.toLocaleString()}
             </div>
             <p className="text-muted-foreground">
               Total estimated cost for your {getDurationText(data.duration)} charter
@@ -192,34 +181,37 @@ const QuoteSummary: React.FC<QuoteSummaryProps> = ({ data, onNext }) => {
             </div>
             <div className="flex justify-between text-sm">
               <span className="text-muted-foreground">Duration</span>
-              <span>{data.duration} days ({Math.round(data.duration / 7 * 10) / 10} weeks)</span>
+              <span>{data.duration} days ({(Math.round(breakdown.weeks * 10) / 10).toFixed(1)} weeks)</span>
             </div>
             
             <Separator className="my-3" />
             
             <div className="flex justify-between font-medium">
               <span>Subtotal</span>
-              <span>${getSubtotal().toLocaleString()}</span>
+              <span>${breakdown.subtotal.toLocaleString()}</span>
             </div>
 
             {data.isBareboatCharter && (
               <>
                 <div className="flex justify-between text-emerald-600 font-medium bg-emerald-50 dark:bg-emerald-950/30 px-3 py-2 rounded-lg">
-                  <span>Bareboat Discount (40%)</span>
-                  <span>-${getBareboatDiscountAmount().toLocaleString()}</span>
-                </div>
-                <div className="text-xs text-muted-foreground px-3">
-                  <p className="mb-1">✓ You save on crew, provisions, and service fees</p>
-                  <p>⚠️ Sailing certification and self-provisioning required</p>
+                  <span>Bareboat Discount (25%)</span>
+                  <span>- ${breakdown.bareboatDiscountAmount.toLocaleString()}</span>
                 </div>
               </>
+            )}
+
+            {breakdown.amenitiesTotal > 0 && (
+              <div className="flex justify-between text-sm">
+                <span className="text-muted-foreground">Amenities</span>
+                <span>+ ${breakdown.amenitiesTotal.toLocaleString()}</span>
+              </div>
             )}
             
             <Separator className="my-4" />
             
             <div className="flex justify-between text-xl font-bold font-elegant">
               <span>Total Estimated Cost</span>
-              <span className="text-primary">${getTotalPrice().toLocaleString()}</span>
+              <span className="text-primary">${breakdown.total.toLocaleString()}</span>
             </div>
             
             <div className="text-xs text-muted-foreground">

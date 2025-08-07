@@ -13,6 +13,7 @@ import { cn } from '@/lib/utils';
 import { WizardData } from '../YachtCharterWizard';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import { computeQuote } from '@/lib/pricing';
 
 interface ContactAndQuoteStepProps {
   data: WizardData;
@@ -90,26 +91,8 @@ const ContactAndQuoteStep: React.FC<ContactAndQuoteStepProps> = ({
     { value: 'evening', label: 'Evening (6:00 - 8:00 PM)' }
   ];
 
-  // Calculate estimated price with detailed breakdown
-  const getSubtotal = () => {
-    if (!data.destination || !data.yachtType) return 0;
-    return Math.round(data.destination.basePrice * data.yachtType.priceMultiplier * data.duration);
-  };
-
-  const getBareboatDiscountAmount = () => {
-    if (!data.isBareboatCharter) return 0;
-    return Math.round(getSubtotal() * 0.4); // 40% discount
-  };
-
-  const getFinalPrice = () => {
-    return getSubtotal() - getBareboatDiscountAmount();
-  };
-
-  const calculateEstimatedPrice = () => {
-    return getFinalPrice();
-  };
-
-  const estimatedPrice = calculateEstimatedPrice();
+  // Quote calculation (centralized)
+  const breakdown = computeQuote(data);
 
   const getContactMethodDisplay = () => {
     const methods = contactDetails.contactMethods || ['email'];
@@ -252,47 +235,54 @@ const ContactAndQuoteStep: React.FC<ContactAndQuoteStepProps> = ({
             <div className="space-y-4">
               <h3 className="font-elegant text-lg mb-4">Price Breakdown</h3>
               
-              <div className="space-y-3">
-                <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Base Charter Rate</span>
-                  <span>${data.destination?.basePrice.toLocaleString()}/week</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Yacht Premium ({data.yachtType?.name})</span>
-                  <span>{data.yachtType?.priceMultiplier}x multiplier</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Duration</span>
-                  <span>{data.duration} days ({Math.round(data.duration / 7 * 10) / 10} weeks)</span>
-                </div>
-                
-                <div className="border-t pt-3">
-                  <div className="flex justify-between font-medium">
-                    <span>Subtotal</span>
-                    <span>${getSubtotal().toLocaleString()}</span>
+                <div className="space-y-3">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">Base Charter Rate</span>
+                    <span>${data.destination?.basePrice.toLocaleString()}/week</span>
                   </div>
-                </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">Yacht Premium ({data.yachtType?.name})</span>
+                    <span>{data.yachtType?.priceMultiplier}x multiplier</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">Duration</span>
+                    <span>{data.duration} days ({(Math.round(breakdown.weeks * 10) / 10).toFixed(1)} weeks)</span>
+                  </div>
+                  
+                  <div className="border-t pt-3">
+                    <div className="flex justify-between font-medium">
+                      <span>Subtotal</span>
+                      <span>${breakdown.subtotal.toLocaleString()}</span>
+                    </div>
+                  </div>
 
-                {data.isBareboatCharter && (
-                  <>
-                    <div className="flex justify-between text-emerald-600 font-medium bg-emerald-50 dark:bg-emerald-950/30 px-3 py-2 rounded-lg">
-                      <span>Bareboat Discount (40%)</span>
-                      <span>-${getBareboatDiscountAmount().toLocaleString()}</span>
+                  {data.isBareboatCharter && (
+                    <>
+                      <div className="flex justify-between text-emerald-600 font-medium bg-emerald-50 dark:bg-emerald-950/30 px-3 py-2 rounded-lg">
+                        <span>Bareboat Discount (25%)</span>
+                        <span>- ${breakdown.bareboatDiscountAmount.toLocaleString()}</span>
+                      </div>
+                      <div className="text-xs text-muted-foreground px-3">
+                        <p className="mb-1">✓ You save on crew, provisions, and service fees</p>
+                        <p>⚠️ Sailing certification and self-provisioning required</p>
+                      </div>
+                    </>
+                  )}
+
+                  {breakdown.amenitiesTotal > 0 && (
+                    <div className="flex justify-between text-sm">
+                      <span className="text-muted-foreground">Amenities</span>
+                      <span>+ ${breakdown.amenitiesTotal.toLocaleString()}</span>
                     </div>
-                    <div className="text-xs text-muted-foreground px-3">
-                      <p className="mb-1">✓ You save on crew, provisions, and service fees</p>
-                      <p>⚠️ Sailing certification and self-provisioning required</p>
+                  )}
+                  
+                  <div className="border-t pt-3">
+                    <div className="flex justify-between text-xl font-bold font-elegant">
+                      <span>Total Estimated Cost</span>
+                      <span className="text-primary">${breakdown.total.toLocaleString()}</span>
                     </div>
-                  </>
-                )}
-                
-                <div className="border-t pt-3">
-                  <div className="flex justify-between text-xl font-bold font-elegant">
-                    <span>Total Estimated Cost</span>
-                    <span className="text-primary">${getFinalPrice().toLocaleString()}</span>
                   </div>
                 </div>
-              </div>
               
               <div className="text-xs text-muted-foreground mt-4 p-3 bg-secondary/20 rounded-lg">
                 * Final pricing depends on specific yacht availability, dates, and additional services. 

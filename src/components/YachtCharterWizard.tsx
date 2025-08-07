@@ -186,15 +186,6 @@ const YachtCharterWizard: React.FC = () => {
           </div>
         )}
 
-        {currentStep === STEPS.length - 1 && (
-          <div id="quote-button" className="flex justify-center mt-8 animate-fade-in">
-            <ContactAndQuoteStep
-              data={wizardData}
-              updateData={updateWizardData}
-              showSubmitButton={true}
-            />
-          </div>
-        )}
       </div>
     </div>
   );
